@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+>
+<f:facet name="header">
+    <p:outputLabel rendered="#{hikeeventBean.hikeevent.id eq null}"
+                   value="Neues Information Event anlegen"></p:outputLabel>
+    <p:outputLabel rendered="#{hikeeventBean.hikeevent.id ne null}"
+                   value=" Bestehendes Information Event bearbeiten"></p:outputLabel>
+
+</f:facet>
+<div class="ui-g-12 ui-md-12">
+    <b:row>
+        <h:form>
+            <p:growl id="informationEventGrowl" life="2000"/>
+            <p:defaultCommand target="dummy"/>
+            <p:commandButton id="dummy" process="@none" global="false" style="display:none;"/>
+            <p:panel>
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+
+
+                        <p:textEditor id="informationEvent_text" widgetVar="textEditorWidget"
+                                      value="#{hikeeventBean.hikeevent.informationevent_text}" height="200">
+                        </p:textEditor>
+
+                        <div class="ui-g-4 ui-md-4 ui-lg-4">
+                            <p:outputLabel for="hikeevent_startByLocation"
+                                           value="Wann soll das Event gestartet werden?"></p:outputLabel>
+                        </div>
+                        <div class="ui-g-8 ui-md-8 ui-lg-8">
+                            <p:selectOneButton id="hikeevent_startByLocation" unselectable="false"
+                                               value="#{hikeeventBean.hikeevent.startByLocation}">
+                                <f:selectItem itemLabel="bei Erreichen" itemValue="#{true}"/>
+                                <f:selectItem itemLabel="direkt starten" itemValue="#{false}"/>
+                                <p:ajax event="change" update="@this @(input[id$='hikeevent_ort'],div[id$='hikeevent_ort_text'],button[id$='hikeevent_ort_map'])" process="@this"/>
+                            </p:selectOneButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+
+                            <div class="ui-g-2 ui-md-2 ui-lg-2">
+                                <p:outputLabel>Wo starten?</p:outputLabel>
+                            </div>
+                            <div class="ui-g-8 ui-md-8 ui-lg-8">
+                                <p:inputText value="#{hikeeventBean.hikeevent.location}"
+                                             disabled="#{ not hikeeventBean.hikeevent.startByLocation}"
+                                             required="#{ hikeeventBean.hikeevent.startByLocation}"
+                                             requiredMessage="#{valmsg['error_hikeevent_location_NULL']}"
+                                             name="ort"
+                                             styleClass="form-control ui-g-10 ui-md-10 ui-lg-10"
+                                             id="hikeevent_ort">
+                                    <f:converter converterId="GPSPointConverter"/>
+                                </p:inputText>
+                                <p:message for="hikeevent_ort" display="text" id="hikeevent_ort_text"/>
+                            </div>
+                            <div class="ui-g-2 ui-md-2 ui-lg-2">
+                                <p:commandButton
+                                        id="hikeevent_ort_map"
+                                        icon="fa fa-map" disabled="#{ not hikeeventBean.hikeevent.startByLocation}"
+                                        oncomplete=" getHikesectionDateJSF();   PF('choosePointDialogHikeSectionWidget').show();"
+                                        styleClass="btn btn-success ui-g-2 ui-md-2 ui-lg-2" process="@this">
+                                </p:commandButton>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <f:facet name="footer">
+                    <p:column>
+                        <p:commandButton id="newBtn" rendered="#{hikeeventBean.hikeevent.id eq null}"
+                                         value="#{msg['btnLabel_save']}" action="#{hikeeventBean.create}"
+                                         oncomplete="hideDialogOnSuccess(args, 'hikeInformationEventDialogWidget')"
+                                         update="informationEventGrowl @form" styleClass="light-green-button"
+                                         process="@form" resetValues="true">
+                            <!--<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>-->
+
+                        </p:commandButton>
+                        <p:commandButton id="updateBtn" rendered="#{hikeeventBean.hikeevent.id ne null}"
+                                         value="#{msg['btnLabel_save']}" action="#{hikeeventBean.update}"
+                                         oncomplete="hideDialogOnSuccess(args, 'hikeInformationEventDialogWidget');"
+                                         update="informationEventGrowl @form"
+                                         process="@form" resetValues="true"
+                                         styleClass="light-green-button">
+                            <!--<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>-->
+
+                        </p:commandButton>
+                        <p:commandButton id="cancelBtn" value="#{msg['btnLabel_cancel']}" styleClass="light-red-button"
+                                         oncomplete="PF('hikeInformationEventDialogWidget').hide();"
+                                         process="@this"/>
+                    </p:column>
+                </f:facet>
+            </p:panel>
+
+        </h:form>
+    </b:row>
+</div>
+</html>

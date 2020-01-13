@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<f:view locale="#{localeBean.locale}">
+
+    <h:head>
+        <meta charset="utf-8" content=""/>
+        <ui:insert name="meta"> </ui:insert>
+
+        <title><ui:insert name="title">"#{msg['btnLabel_signin']}"</ui:insert></title>
+        <h:outputStylesheet library="css" name="reset.css"></h:outputStylesheet>
+
+        <!-- 		<h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet> -->
+        <!-- 	<h:outputStylesheet library="css" name="openlayers.css"></h:outputStylesheet> -->
+        <!-- 	<h:outputScript library="js" name="openlayers/polyfill.min.js"></h:outputScript> -->
+        <!-- 	<h:outputScript library="js" name="openlayers/openlayers.js"></h:outputScript> -->
+        <!-- 	<h:outputScript library="js" name="mapScript.js"></h:outputScript> -->
+         	<h:outputScript library="js" name="generalFunctions.js"></h:outputScript>
+        <!-- 		<h:outputStylesheet library="css" name="fullcalendar.min.css"></h:outputStylesheet> -->
+
+        <!--<h:outputStylesheet name="/primefaces-jepsar/iconmapping.css"/>-->
+
+
+        <h:outputStylesheet library="css" name="animate.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css" name="omega.css"></h:outputStylesheet>
+        <!-- layout.css -->
+        <f:facet name="last">
+            <!-- 				<h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet> -->
+            <h:outputStylesheet library="css" name="custom.css"></h:outputStylesheet>
+        </f:facet>
+        <ui:insert name="stylesheets"></ui:insert>
+    </h:head>
+
+
+    <h:body id="myBody" class="main-body">
+        <div class="wrapper">
+            <p:growl id="messageGrowl" showDetail="true" showIcon="false" globalOnly="true"></p:growl>
+
+            <ui:insert name="header">
+                <ui:include src="header.xhtml"/>
+            </ui:insert>
+
+            <ui:insert name="sidebar">
+                <!--<ui:include src="sidebar_left.xhtml"/>-->
+            </ui:insert>
+
+
+            <div class="main">
+                <ui:insert name="content">Achtung, kein Inhalt definiert!</ui:insert>
+            </div>
+            <ui:insert name="footer">
+                <ui:include src="footer.xhtml"/>
+            </ui:insert>
+
+            <ui:insert name="scripts">
+
+            </ui:insert>
+            <!-- 			</div> -->
+        </div>
+        <ui:insert name="dialogs"/>
+    </h:body>
+</f:view>
+</html>

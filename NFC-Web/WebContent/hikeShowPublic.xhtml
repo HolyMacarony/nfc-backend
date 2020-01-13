@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+>
+
+
+<ui:composition template="/templates/template.xhtml">
+
+    <ui:define name="title">
+        <h:outputText value="public page for sharing and viewing the hike"/>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewAction action="#{hikeBean.init()}"/>
+        </f:metadata>
+        <!-- ################################################################################## -->
+        <p:outputLabel><h3>public hike page</h3></p:outputLabel>
+        <p:outputLabel value="Titel: #{hikeBean.hike.title}"></p:outputLabel><br></br>
+        <p:outputLabel value="Beschreibung: #{hikeBean.hike.description}"></p:outputLabel><br></br>
+        <p:outputLabel value="Erstellt Am: #{hikeBean.hike.createdAt}"></p:outputLabel><br></br>
+        <p:outputLabel value="Einzelspieler: #{hikeBean.hike.singleplayer}"></p:outputLabel><br></br>
+        <p:outputLabel value="Startlocation: #{hikeBean.hike.startlocation}"></p:outputLabel><br></br>
+        <p:outputLabel value="Endlocation: #{hikeBean.hike.endlocation}"></p:outputLabel><br></br>
+    </ui:define>
+</ui:composition>
+</html>

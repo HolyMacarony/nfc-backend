@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+
+>
+<f:facet name="header">
+    <p:outputLabel rendered="#{hikeBean.hike.id gt 0}"
+                   value="Hike #{hikeBean.hike.id} bearbeiten"></p:outputLabel>
+    <p:outputLabel rendered="#{hikeBean.hike.id eq 0}"
+                   value="Hike erstellen"></p:outputLabel>
+</f:facet>
+<div class="ui-g-12 ui-md-12">
+    <b:row>
+        <h:form>
+            <p:growl id="hikeGrowl" life="2000"/>
+            <p:defaultCommand target="dummy"/>
+            <p:commandButton id="dummy" process="@none" global="false" style="display:none;"/>
+
+            <p:panel widgetVar="createHikeDialogWidget">
+
+
+                <p:panelGrid rendered="#{not empty hikeBean.hike}" id="hikeCreate" columns="2"
+                             columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel value="#{msg['label_hikeTitle']}" for="title"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:inputText value="#{hikeBean.hike.title}" name="title" styleClass="form-control"
+                                             id="title">
+                                    <p:ajax event="blur" update="title_text" process="@this"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <p:message for="title" display="text" id="title_text"/>
+                    </p:column>
+
+                    <p:outputLabel value="#{msg['label_hikeDescription']}" for="description"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:inputTextarea value="#{hikeBean.hike.description}" name="description"
+                                                 styleClass="form-control"
+                                                 id="description">
+                                    <p:ajax event="blur" update="description_text" process="@this"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                        <p:message for="description" display="text" id="description_text"/>
+                    </p:column>
+
+                    <p:outputLabel value="#{msg['label_hikeUrl']}" for="url"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:inputText value="#{hikeBean.hike.publicurl}" name="url" styleClass="form-control"
+                                             mask="" id="url">
+                                    <!--<p:keyFilter regEx="^[a-zA-Z0-9_-]*$" inputRegEx="^[a-zA-Z0-9_-]*$"/>-->
+                                    <!--<f:validateRegex pattern="^[a-zA-Z0-9_-]*$"/>-->
+                                    <p:ajax event="keyup" update="url_text" process="@this"/>
+                                </p:inputText>
+
+                            </div>
+                        </div>
+                        <p:message for="url" display="text" id="url_text"/>
+                    </p:column>
+
+                    <p:outputLabel value="Spielmodus" for="singleplayer"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:selectOneButton unselectable="false" id="singleplayer"
+                                                   value="#{hikeBean.hike.singleplayer}">
+                                    <f:selectItem itemLabel="Einzelspieler" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="Gruppenspiel" itemValue="#{false}"/>
+                                </p:selectOneButton>
+                            </div>
+                        </div>
+                        <!--<p:message for="url" display="text" id="singleplayer_text"/>-->
+                    </p:column>
+
+                    <p:outputLabel value="Reihenfolge" for="lineargameplay"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:selectOneButton unselectable="false" id="lineargameplay"
+                                                   value="#{hikeBean.hike.lineargameplay}">
+                                    <f:selectItem itemLabel="Linear" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="Willkürlich" itemValue="#{false}"/>
+                                </p:selectOneButton>
+                            </div>
+                        </div>
+                        <!--<p:message for="url" display="text" id="lineargameplay_text"/>-->
+                    </p:column>
+
+
+                    <p:outputLabel value="privat" for="privat"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:selectOneButton unselectable="false" id="privat"
+                                                   value="#{hikeBean.hike.privatehike}">
+                                    <f:selectItem itemLabel="privat" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="öffentlich" itemValue="#{false}"/>
+                                    <p:ajax event="change" update="@form" process="@this"/>
+                                </p:selectOneButton>
+                            </div>
+                        </div>
+                        <!--<p:message for="url" display="text" id="lineargameplay_text"/>-->
+                    </p:column>
+
+                    <p:outputLabel rendered="#{hikeBean.hike.privatehike}" value="password" for="password"/>
+                    <p:column rendered="#{hikeBean.hike.privatehike}">
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:password value="#{hikeBean.hike.password}" required="#{hikeBean.hike.privatehike}"
+                                            name="password" styleClass="form-control"
+                                            id="password" requiredMessage="Bitte vergeben Sie ein Passwort">
+
+                                    <!--<p:ajax event="blur" update="title_text" process="@this"/>-->
+                                </p:password>
+                                <p:message for="password" display="text" id="password_text"/>
+                            </div>
+                        </div>
+                        <!--<p:message for="url" display="text" id="lineargameplay_text"/>-->
+                    </p:column>
+
+
+                    <p:outputLabel value="aktivieren am" for="hike_enabled"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:calendar widgetVar="hike_enabled" mindate="#{calendarbean.minDate}"
+                                            id="hike_enabled"
+                                            value="#{hikeBean.hike.enabled}" showOn="button" locale="de"
+                                            navigator="true"
+                                            pattern="MM-dd-yyyy HH:mm:ss" mask="true">
+                                    <p:ajax event="dateSelect" listener="#{hikeBean.onDateSelect}" update="hikeGrowl"/>
+                                </p:calendar>
+                            </div>
+                        </div>
+                    </p:column>
+
+                    <p:outputLabel for="hike_start_ort">Wo/Wann starten?</p:outputLabel>
+
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <div class="ui-inputgroup">
+                                    <p:inputText value="#{hikeBean.hike.startlocation}"
+                                                 styleClass="form-control "
+                                                 id="hike_start_ort">
+                                        <f:converter converterId="GPSPointConverter"/>
+                                    </p:inputText>
+                                    <p:commandButton action="#{hikeBean.setChooseLocationInvoker('Location_start')}"
+                                                     id="hike_start_ort_map" icon="fa fa-map"
+                                                     oncomplete=" setTheInvokerOfHikePositionDialog();   getHikeStartDateJSF();   PF('choosePointDialogHikeWidget').show();   "
+                                                     styleClass="btn btn-success" process="@this">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                        <p:message for="hike_start_ort" display="text" id="hike_start_ort_text"/>
+
+                    </p:column>
+
+                    <p:outputLabel for="hike_end_ort">Wo/Wann enden?</p:outputLabel>
+
+                    <b:column>
+                        <p:column>
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                    <div class="ui-inputgroup">
+                                        <p:inputText value="#{hikeBean.hike.endlocation}"
+                                                     styleClass="form-control "
+                                                     id="hike_end_ort">
+                                            <f:converter converterId="GPSPointConverter"/>
+                                        </p:inputText>
+                                        <p:commandButton action="#{hikeBean.setChooseLocationInvoker('Location_end')}"
+                                                         id="hike_end_ort_map" icon="fa fa-map"
+                                                         oncomplete=" setTheInvokerOfHikePositionDialog();   getHikeendDateJSF();   PF('choosePointDialogHikeWidget').show();   "
+                                                         styleClass="btn btn-success" process="@this">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                            <p:message for="hike_end_ort" display="text" id="hike_end_ort_text"/>
+
+                        </p:column>
+
+                    </b:column>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <p:column>
+                        <p:commandButton rendered="#{hikeBean.hike.id gt 0}" action="#{hikeBean.update}"
+                                         value="#{msg.btnLabel_save}"
+                                         styleClass="light-green-button"
+                                         oncomplete="hideDialogOnSuccess(args, 'createHikeWidget');"
+                                         update="hikeGrowl  @widgetVar(createHikeDialogWidget) @widgetVar(myHikesWidget)"
+                                         process="@form" resetValues="true">
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+                        </p:commandButton>
+                        <p:commandButton rendered="#{hikeBean.hike.id eq 0}" action="#{hikeBean.create}"
+                                         value="#{msg.btnLabel_save}"
+                                         styleClass="light-green-button"
+                                         oncomplete="hideDialogOnSuccess(args, 'createHikeWidget');"
+                                         update="hikeGrowl  @widgetVar(createHikeDialogWidget)"
+                                         process="@form" resetValues="true">
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+                        </p:commandButton>
+
+                        <p:commandButton styleClass="light-red-button" value="Cancel" oncomplete="PF('createHikeWidget').hide();"/>
+                    </p:column>
+                </f:facet>
+            </p:panel>
+
+            <p:remoteCommand name="setTheInvokerOfHikePositionDialog"
+                             actionListener="#{hikeBean.setTheInvokerOfHikePositionDialog()}"
+                             oncomplete="setCurrentInvoker(xhr, status, args);" process="@this"/>
+
+            <p:remoteCommand name="getHikeStartDateJSF" actionListener="#{hikeBean.getHikeStartDate()}"
+                             oncomplete="setCurrentDate(xhr, status, args);" process="@this"/>
+
+            <p:remoteCommand name="getHikeendDateJSF" actionListener="#{hikeBean.getHikeEndDate()}"
+                             oncomplete="setCurrentDate(xhr, status, args);" process="@this"/>
+
+
+            <p:remoteCommand name="setLocation" actionListener="#{hikeBean.setLocation}" process="@this"/>
+
+
+        </h:form>
+    </b:row>
+</div>
+</html>

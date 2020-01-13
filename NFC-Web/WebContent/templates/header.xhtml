@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+>
+
+<ui:composition>
+    <p:row>
+        <h:form id="menuform">
+            <p:menubar id="menubar">
+                <p:menuitem value="My Hikes Dashboard" icon="fa fa-bars" rendered="#{not empty request.remoteUser}"
+                            url="/dashboard"/>
+                <p:menuitem value="ADMIN PANEL" icon="fa fa-lock" rendered="#{ request.isUserInRole('ADMINISTRATOR') }"
+                            url="/userIndex"/>
+                <p:menuitem>
+                </p:menuitem>
+                <f:facet name="options">
+                    <p:menuButton style="margin-right:10px"
+                                  value="#{empty request.remoteUser ? msg['label_guest']:
+                                  authBean.impersonatedUser.id ne null ? authBean.impersonatedUser :authBean.authenticatedUser}">
+
+                        <p:menuitem rendered="#{empty request.remoteUser}" value="Anmelden" url="/signin" ajax="false"
+                                    icon="fa fa-sign-in"/>
+
+                        <p:separator rendered="#{ not request.isUserInRole('USER') }"/>
+
+                        <p:menuitem rendered="#{empty request.remoteUser}" value="#{msg['btnLabel_register']}"
+                                    url="register"
+                                    ajax="false" icon="fa fa-pencil"/>
+
+                        <p:menuitem
+                                rendered="#{ request.isUserInRole('ADMINISTRATOR') and authBean.impersonatedUser.id ne null }"
+                                value="UN-IMPERSONATE" icon="fa fa-ban" action="#{authBean.unimpersonateUser()}">
+
+                        </p:menuitem>
+                        <p:separator
+                                rendered="#{ request.isUserInRole('ADMINISTRATOR') and authBean.impersonatedUser.id ne null }"/>
+                        <p:menuitem type="button" rendered="#{not empty request.remoteUser}"
+                                    value="#{msg['btnLabel_signout']}"
+                                    action="#{authBean.logout()}" icon="fa fa-sign-out" update="menuform messageGrowl"
+                                    ajax="false"/>
+                    </p:menuButton>
+                    <p:inplace id="lang">
+                        <f:facet name="output">
+                            <p:commandButton type="button" icon="fa fa-language"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu dynamic="true" id="language" value="#{localeBean.localeCode}"
+                                             style="width:150px">
+                                <p:ajax oncomplete="window.location.replace(window.location.href);"
+                                        event="change" listener="#{localeBean.onLanguageChange}"/>
+                                <f:selectItem itemLabel="#{msg['label_chose_language']}" itemValue=""
+                                              itemDisabled="true"
+                                              noSelectionOption="false"/>
+                                <f:selectItems value="#{localeBean.countriesInMap}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:inplace>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </p:row>
+    <br></br>
+    <b:row>
+        <h:form>
+            <p:breadCrumb rendered="#{not empty request.remoteUser}" model="#{breadcrumbMenuBean.model}">
+            </p:breadCrumb>
+        </h:form>
+    </b:row>
+
+    <!--<p:separator/>-->
+
+    <!-- 	<div class="topbar clearfix"> -->
+    <!-- 		<a id="omega-menu-button" href="#" class=""> <span class="fa fa-bars"></span> -->
+    <!-- 		</a> -->
+    <!-- 		<p:commandButton id="omega-menu-button" icon="fa fa-bars" oncomplete="PF('sidebar1').show()"></p:commandButton> -->
+
+    <!-- 		<span class="topbar-title">Dashboard</span> <a id="options-menu-button" href="#"> <span class="fa fa-ellipsis-h"></span> -->
+    <!-- 		</a> -->
+
+    <!-- 		<div id="topbar-icons" class="animated"> -->
+    <!-- 			<span class="topbar-search"> <input type="text" placeholder="Search"></input> <span class="topbar-search-icon fa fa-search"></span> -->
+    <!-- 			</span> <a href="#"> <span class="topbar-item-text">Messages</span> <span class="topbar-icon fa-language animated swing"></span> <span -->
+    <!-- 				class="topbar-badge animated rubberBand">5</span> -->
+    <!-- 			</a> <a href="#"> <span class="topbar-item-text">Settings</span> <span class="topbar-icon fa fa-gear"></span> -->
+    <!-- 			</a> <a href="#"> <span class="topbar-item-text">User</span> <span class="topbar-icon fa fa-user"></span> -->
+    <!-- 			</a> -->
+    <!-- 		</div> -->
+
+    <!-- 	</div> -->
+
+
+    <!-- ############################################################# -->
+
+    <p:ajaxStatus>
+        <f:facet name="error">
+        </f:facet>
+        <f:facet name="success">
+        </f:facet>
+        <f:facet name="default">
+        </f:facet>
+        <f:facet name="start">
+            <div class="lds-spinner">
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+                <div class="#"></div>
+            </div>
+        </f:facet>
+        <f:facet name="complete">
+        </f:facet>
+    </p:ajaxStatus>
+
+
+</ui:composition>
+</html>

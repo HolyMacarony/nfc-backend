@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+>
+
+<f:facet name="header">
+    <p:outputLabel rendered="#{hikesectionBean.hikesection.id eq null}"
+                   value="Neue HikeSection anlegen"></p:outputLabel>
+    <p:outputLabel rendered="#{hikesectionBean.hikesection.id ne null}"
+                   value="  Section bearbeiten: #{hikesectionBean.hikesection.id}"></p:outputLabel>
+</f:facet>
+<div class="ui-g-12 ui-md-12">
+    <b:row>
+        <h:form>
+            <p:growl id="sectionGrowl" life="2000"/>
+            <p:defaultCommand target="dummy3324"/>
+            <p:commandButton id="dummy3324" process="@none" global="false" style="display:none;"/>
+            <p:panel widgetVar="hikeSectionPanel">
+                <p:panelGrid  rendered="#{not empty hikesectionBean.hikesection}" id="hikeSectionCreate" columns="2"
+                             columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel value="#{msg['label_hikeTitle']}" for="hikesection_title"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:inputText value="#{hikesectionBean.hikesection.title}" name="name"
+                                             styleClass="form-control" id="hikesection_title">
+                                    <p:ajax event="blur" update="hikesection_title_message" process="@this"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <p:message for="hikesection_title" display="text" id="hikesection_title_message"/>
+                    </p:column>
+
+                    <p:outputLabel value="wann Starten?" for="hikesection_startByLocation"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:selectOneButton id="hikesection_startByLocation" required="true" unselectable="false"
+                                                   value="#{hikesectionBean.hikesection.startByLocation}">
+                                    <f:selectItem itemLabel="bei Erreichen" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="direkt starten" itemValue="#{false}"/>
+
+                                    <p:ajax event="change" update="@form" process="@this"/>
+
+                                </p:selectOneButton>
+                            </div>
+                        </div>
+                        <!--<p:message for="hikesection_startByLocation" display="text" id="hikesection_startByLocation_message"/>-->
+                    </p:column>
+                    <p:outputLabel value="Ort" for="hikesection_ort"/>
+                    <b:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <div class="ui-inputgroup">
+                                    <p:inputText value="#{hikesectionBean.hikesection.location}" name="ort"
+                                                 disabled="#{ not hikesectionBean.hikesection.startByLocation}"
+                                                 styleClass="form-control"
+                                                 id="hikesection_ort"
+                                                 requiredMessage="#{valmsg['error_hikesection_location_NULL']}"
+                                                 required="#{hikesectionBean.hikesection.startByLocation}">
+                                        <f:converter converterId="GPSPointConverter"/>
+                                    </p:inputText>
+                                    <p:commandButton action="#{hikesectionBean.setDateEditable('true')}"
+                                                     id="hikesection_ort_map"
+                                                     icon="fa fa-map"
+                                                     disabled="#{ not hikesectionBean.hikesection.startByLocation}"
+                                                     oncomplete=" getHikesectionDateJSF();   PF('choosePointDialogHikeSectionWidget').show();   "
+                                                     styleClass="btn btn-success"
+                                                     process="@this">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                        <p:message class="ui-g-12 ui-md-12 ui-lg-12 " for="hikesection_ort" display="text"
+                                   id="hikesection_ort_message"/>
+                    </b:column>
+                    <p:outputLabel value="Datum" for="hikesection_date"/>
+                    <p:column>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                <p:outputLabel value="#{hikesectionBean.hikesection.date}" name="date" required="true"
+                                               styleClass="form-control" id="hikesection_date">
+                                    <f:convertDateTime pattern="dd.MM.yyyy"
+                                                       locale="#{localeBean.locale}"></f:convertDateTime>
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                        <p:message for="hikesection_date" display="text" id="hikesection_date_message"/>
+                    </p:column>
+
+
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <p:column>
+                        <p:commandButton rendered="#{hikesectionBean.hikesection.id eq null}"
+                                         action="#{hikesectionBean.create()}"
+                                         value="#{msg.btnLabel_save}"
+                                         process="@form"
+                                         update="@form @widgetVar(myHikeWidget) sectionGrowl"
+                                         oncomplete="hideDialogOnSuccess(args,'sectionDialogWidget')"
+                                         styleClass="light-green-button"
+                        >
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+                        </p:commandButton>
+                        <p:commandButton rendered="#{hikesectionBean.hikesection.id ne null}"
+                                         action="#{hikesectionBean.update()}"
+                                         value="#{msg.btnLabel_save}"
+                                         process="@form"
+                                         update="@form @widgetVar(myHikeWidget) sectionGrowl"
+                                         oncomplete="hideDialogOnSuccess(args,'sectionDialogWidget')"
+                                         styleClass="light-green-button"
+                        >
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+                        </p:commandButton>
+                        <p:commandButton value="Cancel" oncomplete="PF('sectionDialogWidget').hide();"   styleClass="light-red-button" process="@this"/>
+                    </p:column>
+                </f:facet>
+            </p:panel>
+        </h:form>
+    </b:row>
+</div>
+</html>

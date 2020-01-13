@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
+<ui:composition template="/templates/template.xhtml">
+    <o:importConstants type="pictures.taking.washing.persistence.enums.EventEnum"/>
+    <ui:define name="title"> <h:outputText value="public page for sharing and viewing the hike"/> </ui:define>
+    <ui:define name="sidebar"> <ui:include src="templates/sidebar_right.xhtml"></ui:include> </ui:define>
+    <ui:define name="stylesheets"> <h:outputStylesheet library="css" name="/leaflet/leaflet.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css"
+                            name="/leaflet/plugins/fullscreen/Control.FullScreen.css"></h:outputStylesheet>
+        <h:outputStylesheet library="css" name="/leaflet/plugins/geocoder/Control.Geocoder.css"></h:outputStylesheet>
+    </ui:define>
+
+
+    <ui:define name="content">
+        <f:metadata> <f:viewAction action="#{hikeBean.init()}"/> <f:viewAction action="#{hikesectionBean.init()}"/>
+        </f:metadata>
+        <!-- ################################################################################## -->
+        <div class="ui-g">
+            <div class="ui-g-0 ui-md-1 ui-lg-2"></div>
+            <h:form styleClass="ui-g-12 ui-md-10 ui-lg-8" id="hikeForm">
+                <p:growl id="reorderGrowl" showDetail="true" life="2000"/>
+
+                <p:tree id="hikeTree" styleClass="ui-g-12 ui-md-10 ui-lg-8" value="#{treeDNDView.rootNode}" var="node"
+                        draggable="true" droppable="true" selectionMode="single" selection="#{treeDNDView.selectedNode}"
+                        dynamic="true" widgetVar="myHikeWidget">
+                    <p:ajax event="dragdrop" listener="#{treeDNDView.onDragDrop}"
+                            update="messageGrowl hikeForm:hikeTree"/>
+                    <p:ajax event="select" update="messageGrowl" listener="#{treeDNDView.onSelectNode}"/>
+                    <p:ajax event="expand" update="hikeForm:hikeTree" listener="#{treeDNDView.nodeExpand}"/>
+                    <p:ajax event="collapse" update="hikeForm:hikeTree" listener="#{treeDNDView.nodeCollapse}"/>
+
+
+                    <p:treeNode id="section_#{node.id}" type="section" dragdropScope="section">
+                        <p:panel id="section_panel_#{node.id}"  header="#{msg['label_hikeSection']}">
+                            <f:facet name="actions">
+                                <p:commandButton id="btnSectionEdit" update=":hikeFormDialogs" icon="fa fa-pencil"
+                                                 actionListener="#{treeDNDView.editSection(node)}"
+                                                 oncomplete="PF('sectionDialogWidget').show()"> </p:commandButton>
+
+                                <p:tooltip id="toolTipBtnSectionEdit" widgetVar="sectionToolTipVar_edit_#{node.id}"
+                                           for="btnSectionEdit" value="edit" position="top"
+                                           hideEvent="mouseleave  click"/>
+
+                                <p:commandButton id="btnSectionMoveUp" a:data-move-button="up"
+                                                 update=":hikeForm:reorderGrowl" icon="fa fa-arrow-up"
+                                                 action="#{treeDNDView.moveUpSection(node)}"> </p:commandButton>
+                                <p:tooltip id="toolTipBtnSectionMoveUp" widgetVar="sectionToolTipVar_up_#{node.id}"
+                                           for="btnSectionMoveUp" value="up" position="top"/>
+
+                                <p:commandButton id="btnSectionMoveDown" a:data-move-button="down"
+                                                 update=":hikeForm:reorderGrowl" icon="fa fa-arrow-down"
+                                                 action="#{treeDNDView.moveDownSection(node)}"> </p:commandButton>
+                                <p:tooltip id="toolTipBtnSectionMoveDown" widgetVar="sectionToolTipVar_down_#{node.id}"
+                                           for="btnSectionMoveDown" value="down" position="top"/>
+
+                                <p:commandButton id="btnSectionDelete" a:data-delete-button="delete"
+                                                 update=":hikeForm:reorderGrowl :hikeForm:hikeTree"
+                                                 styleClass="#{hikesectionBean.hikesectionToBeDeleted.id eq node.id ? 'markDeletion' : ''}"
+                                                 icon="fa fa-trash" actionListener="#{treeDNDView.deleteSection(node)}"
+                                                 onclick="#{hikeeventBean.hikeeventToBeDeleted.id eq node.id ? 'removeMarkAndToolTip(event,true)' : 'removeMarkAndToolTip(event,false)'}"> </p:commandButton>
+                                <p:tooltip rendered="#{hikesectionBean.hikesectionToBeDeleted.id ne node.id}"
+                                           id="toolTipBtnSectionDelete" widgetVar="sectionToolTipVar_delete_#{node.id}"
+                                           for="btnSectionDelete" hideEvent="mouseleave   click" value="delete"
+                                           position="top"/>
+                                <p:tooltip rendered="#{hikesectionBean.hikesectionToBeDeleted.id eq node.id}"
+                                           id="toolTipBtnSectionDeleteSure"
+                                           widgetVar="sectionToolTipVar_deleteSure_#{node.id}"
+                                           for="btnSectionDelete" hideEvent="mouseleave   click" value="SICHER?"
+                                           position="top"/>
+                            </f:facet>
+                            <p:outputLabel value="Name:  #{node.title}"/><br></br>
+                            <p:outputLabel
+                                    value="#{node.startByLocation eq true ? 'Bei Erreichen starten' :'Direkt starten'}"/><br></br>
+                            <p:outputLabel value="Nutzt Kartenmaterial vom: "></p:outputLabel>
+                            <p:outputLabel value="#{node.date}" name="date" required="true"
+                                           styleClass="form-control" id="hikesection_date">
+                                <f:convertDateTime pattern="dd.MM.yyyy"
+                                                   locale="#{localeBean.locale}"></f:convertDateTime>
+                            </p:outputLabel>
+                            <br></br>
+                            <p:outputLabel value="Ort: "></p:outputLabel>
+                            <h:outputText value="#{node.location}">
+                                <f:converter converterId="GPSPointConverter"/>
+                            </h:outputText>
+                            <br></br>
+                        </p:panel>
+                        <!--<p:draggable for="section_panel_#{node.id}" axis="y" />-->
+                    </p:treeNode>
+
+                    <p:treeNode id="event_#{node.id}" type="event" dragdropScope="event">
+                        <p:panel id="event_panel_#{node.id}">
+                            <f:facet name="header">
+                                <h:outputText
+                                        rendered="#{of:isInstance('InformationEvent', node)}"
+                                        value="#{msg['label_hikeEvent_information']}"/>
+                                <h:outputText
+                                        rendered="#{of:isInstance('LocationEvent', node)}"
+                                        value="#{msg['label_hikeEvent_location']}"/>
+                                <h:outputText
+                                        rendered="#{of:isInstance('TaskEvent', node)}"
+                                        value="#{msg['label_hikeEvent_task']}"/>
+                            </f:facet>
+                            <f:facet name="actions">
+                                <p:commandButton id="btnEventEdit" icon="fa fa-pencil"
+                                                 onclick="hideTooltips();"
+                                                 oncomplete="PF('#{node.getEditFormName()}').show()"
+                                                 update=":hikeFormDialogs"
+                                                 actionListener="#{treeDNDView.editEvent(node)}"> </p:commandButton>
+
+                                <p:tooltip id="toolTipBtnEventEdit" widgetVar="eventToolTipVar_edit_#{node.id}"
+                                           for="btnEventEdit" value="edit" position="top"
+                                           hideEvent="mouseleave  click"/>
+
+                                <p:commandButton id="btnEventMoveUp" a:data-move-button="up"
+                                                 update=":hikeForm:reorderGrowl" icon="fa fa-arrow-up"
+                                                 onclick="hideTooltips();"
+                                                 actionListener="#{treeDNDView.moveUpEvent(node)}"> </p:commandButton>
+                                <p:tooltip id="toolTipBtnEventMoveUp" widgetVar="eventToolTipVar_up_#{node.id}"
+                                           for="btnEventMoveUp" value="up" position="top"
+                                           hideEvent="mouseleave   click"/>
+
+                                <p:commandButton id="btnEventMoveDown" a:data-move-button="down"
+                                                 update=":hikeForm:reorderGrowl" icon="fa fa-arrow-down"
+                                                 onclick="hideTooltips();"
+                                                 actionListener="#{treeDNDView.moveDownEvent(node)}"> </p:commandButton>
+                                <p:tooltip id="toolTipBtnEventMoveDown" widgetVar="eventToolTipVar_down_#{node.id}"
+                                           for="btnEventMoveDown" value="down" position="top"
+                                           hideEvent="mouseleave   click"/>
+
+                                <p:commandButton id="btnEventDelete" update=":hikeForm:reorderGrowl :hikeForm:hikeTree"
+                                                 styleClass="#{hikeeventBean.hikeeventToBeDeleted.id eq node.id ? 'markDeletion' : ''}"
+                                                 icon="fa fa-trash"
+                                                 onclick="#{hikeeventBean.hikeeventToBeDeleted.id eq node.id ? 'removeMarkAndToolTip(event,true)' : 'removeMarkAndToolTip(event,false)'}"
+                                                 actionListener="#{treeDNDView.deleteEvent(node)}"> </p:commandButton>
+                                <p:tooltip rendered="#{hikeeventBean.hikeeventToBeDeleted.id ne node.id}"
+                                           id="toolTipBtnEventDelete" widgetVar="eventToolTipVar_delete_#{node.id}"
+                                           for="btnEventDelete" hideEvent="mouseleave   click" value="delete"
+                                           position="top"/>
+                                <p:tooltip rendered="#{hikeeventBean.hikeeventToBeDeleted.id eq node.id}"
+                                           id="toolTipBtnEventDeleteSure"
+                                           widgetVar="eventToolTipVar_deleteSure_#{node.id}"
+                                           for="btnEventDelete" hideEvent="mouseleave   click" value="SICHER?"
+                                           position="top"/>
+                            </f:facet>
+                            <p:outputPanel
+                                    rendered="#{of:isInstance('InformationEvent', node)}">
+                                <!--<p:outputLabel value="Information: "></p:outputLabel>-->
+                                <h:outputText id="Informationevent_#{node.id}" value="#{node.informationevent_text}"
+                                              escape="false"/><br></br>
+                                <p:outputLabel
+                                        value="#{node.startByLocation ? 'Dieses Event wird erst gestartet, wenn sich der Spieler an der folgenden GPS Koordinate befindet: ':'Das Event startet sofort' }"/>
+                                <p:outputLabel rendered="#{node.startByLocation }" value="#{node.location}">
+                                    <f:converter converterId="GPSPointConverter"/>
+                                </p:outputLabel>
+                            </p:outputPanel>
+
+                            <p:outputPanel
+                                    rendered="#{of:isInstance('TaskEvent', node)}">
+                                <p:outputLabel>#{node.taskevent_text}</p:outputLabel><br></br>
+                                <p:outputLabel>#{node.taskevent_findmandatory}</p:outputLabel><br></br>
+                                <p:outputLabel>#{node.taskevent_scanmandatory}</p:outputLabel>
+                            </p:outputPanel>
+
+                            <p:outputPanel
+                                    rendered="#{of:isInstance('LocationEvent', node)}">
+                                <p:outputLabel value="Beschreibung: "></p:outputLabel>
+                                <p:outputLabel value="#{node.locationevent_text}"
+                                               escape="false"></p:outputLabel><br></br>
+
+                                <p:outputLabel value="Punkte: "></p:outputLabel>
+                                <p:outputLabel>#{node.locationevent_points}</p:outputLabel><br></br>
+
+                                <p:outputLabel
+                                        value="#{node.locationevent_showmapnotarrow ? 'Karte für Spieler anzeigen': 'Richtungspfeil anzeigen'}"></p:outputLabel><br></br>
+
+                                <p:outputLabel
+                                        value="#{node.locationevent_findmandatory ? 'Der Zielort muss erreicht werden, damit der der Spieler weiter spielen kann': 'Der Zielort muss NICHT erreicht werden, damit der Spieler weiterspielen kann'}"></p:outputLabel><br></br>
+                                <p:outputLabel
+                                        value="#{node.startByLocation ? 'Dieses Event wird erst gestartet, wenn sich der Spieler an der folgenden GPS Koordinate befindet: ':'Das Event startet sofort' }"/><br></br>
+                                <p:outputLabel rendered="#{node.startByLocation }" value="#{node.location}">
+                                    <f:converter converterId="GPSPointConverter"/>
+                                </p:outputLabel><br></br>
+
+                                <p:outputLabel
+                                        value="#{node.locationevent_locationToGo ne null  ? 'Die Zielkoordinaten lauten ' : ' es gibt keine Zielkoordinaten?'}"/>
+                                <p:outputLabel rendered="#{node.locationevent_locationToGo ne null }"
+                                               value="#{ node.locationevent_locationToGo }">
+                                    <f:converter converterId="GPSPointConverter"/>
+                                </p:outputLabel><br></br>
+                            </p:outputPanel>
+                        </p:panel>
+                        <!--<p:draggable for="event_panel_#{node.id}" axis="y" />-->
+                    </p:treeNode>
+                </p:tree>
+            </h:form>
+            <h:form>
+                <p:remoteCommand name="initTree" actionListener="#{treeDNDView.init}"/>
+                <p:remoteCommand name="setPosition" actionListener="#{treeDNDView.setSurroundingPositions}"/>
+                <p:remoteCommand name="addSection" actionListener="#{treeDNDView.addSection}"/>
+                <p:remoteCommand name="setLocation" actionListener="#{treeDNDView.setLocation}"/>
+                <p:remoteCommand name="addEvent" actionListener="#{treeDNDView.addEvent}"/>
+                <p:remoteCommand name="deleteEvent" actionListener="#{treeDNDView.deleteEvent}"/>
+                <p:remoteCommand name="disableDatePicker" actionListener="#{hikesectionBean.setDateEditable('false')}"/>
+                <p:remoteCommand name="deleteSection" actionListener="#{treeDNDView.deleteSection}"/>
+                <p:remoteCommand name="resetCurrentSection" update="@widgetVar(sectionDialogWidget)"
+                                 actionListener="#{treeDNDView.resetCurrentSection}"/>
+                <p:remoteCommand name="clearToBeDeletedSection"
+                                 actionListener="#{treeDNDView.clearToBeDeletedSection}"/>
+                <p:remoteCommand name="clearToBeDeletedEvent" actionListener="#{treeDNDView.clearToBeDeletedEvent}"/>
+                <p:remoteCommand name="getHikesectionDateJSF" actionListener="#{treeDNDView.getHikesectionDate()}"
+                                 oncomplete="setCurrentDate(xhr, status, args);"/>
+                <p:remoteCommand name="getChooseLocationInvokerJSF"
+                                 actionListener="#{treeDNDView.getChooseLocationInvoker()}"
+                                 oncomplete="setCurrentInvoker(xhr, status, args);"/>
+                <p:remoteCommand name="updatePrimefacesWidget" process="@this"
+                                 actionListener="#{treeDNDView.setToBeRefreshedWidget}"
+                                 update="#{treeDNDView.toBeRefreshedWidgetID}"/>
+                <p:remoteCommand name="updatePrimefacesWidgetByWidgetVar" process="@this"
+                                 actionListener="#{treeDNDView.setToBeRefreshedWidgetByWidgetVar}"
+                                 update="#{treeDNDView.toBeRefreshedWidgetID}"/>
+            </h:form>
+            <div class="ui-g-0 ui-md-1 ui-lg-2"></div>
+        </div>
+    </ui:define>
+    <ui:define name="dialogs">
+        <h:form id="hikeFormDialogs">
+            <p:defaultCommand target="dummy3325"/>
+            <p:commandButton id="dummy3325" process="@none" global="false" style="display:none;"/>
+            <p:dialog id="hikeSectionDialog" widgetVar="sectionDialogWidget" minWidth="400" minHeight="400"
+                      closable="true" dynamic="true" modal="true" resizable="false" draggable="false"
+                      closeOnEscape="true" responsive="true" fitViewport="true">
+                <ui:include src="forms/createSectionDialog.xhtml"/>
+            </p:dialog>
+
+            <p:dialog id="hikeInformationEventDialog" widgetVar="hikeInformationEventDialogWidget" minWidth="400"
+                      minHeight="400"
+                      onShow="PF('hikeInformationEventDialogWidget').initPosition();" closable="true" dynamic="true"
+                      modal="true" resizable="false" draggable="false" closeOnEscape="true" responsive="true"
+                      position="center center" fitViewport="true">
+                <ui:include src="forms/createInformationEventDialog.xhtml"/>
+            </p:dialog>
+
+            <p:dialog id="hikeLocationEventDialog" widgetVar="hikeLocationEventDialogWidget" minWidth="400"
+                      minHeight="400" position="center center"
+                      onShow="PF('hikeLocationEventDialogWidget').initPosition();"
+                      closable="true" dynamic="true" modal="true" resizable="false" draggable="false"
+                      closeOnEscape="true" responsive="true" fitViewport="true">
+                <ui:include src="forms/createLocationEventDialog.xhtml"/>
+            </p:dialog>
+
+
+            <div class="ui-g">
+                <p:dialog id="choosePointDialogHikeSection" class="ui-grid-col-12"
+                          widgetVar="choosePointDialogHikeSectionWidget" closable="true"
+                          onShow="choosePointDialog(); PF('choosePointDialogHikeSectionWidget').initPosition();"
+                          onHide="disableDatePicker();"
+                          header="Ort wählen" modal="true" resizable="x" dynamic="true" draggable="false"
+                          closeOnEscape="true" responsive="true">
+                    <ui:include src="forms/choosePointDialogHikeSection.xhtml"/>
+                </p:dialog>
+            </div>
+        </h:form>
+    </ui:define>
+    <ui:define name="scripts">
+        <!--<h:outputScript library="js" name="MyDialog.js"/>-->
+        <h:outputScript library="js" name="jquery-swapsies.js"></h:outputScript>
+        <h:outputScript library="js" name="myTree.js"/>
+        <h:outputScript library="js" name="/leaflet/leaflet-src.js"></h:outputScript>
+        <h:outputScript library="js" name="/leaflet/plugins/wfs/leaflet-wfst.min.js"></h:outputScript>
+        <h:outputScript library="js" name="/leaflet/plugins/wms/leaflet.wms.js"></h:outputScript>
+        <h:outputScript library="js" name="/leaflet/plugins/geocoder/Control.Geocoder.js"></h:outputScript>
+        <h:outputScript library="js" name="/leaflet/plugins/fullscreen/Control.FullScreen.js"></h:outputScript>
+        <h:outputScript library="js" name="/choosePointDialog.js"></h:outputScript>
+    </ui:define>
+</ui:composition>
+</html>

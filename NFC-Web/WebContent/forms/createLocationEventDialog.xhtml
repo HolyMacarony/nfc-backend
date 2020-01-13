@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+>
+<f:facet name="header">
+    <p:outputLabel rendered="#{hikeeventBean.hikeevent.id eq null}"
+                   value="Neues Location Event anlegen"></p:outputLabel>
+    <p:outputLabel rendered="#{hikeeventBean.hikeevent.id ne null}"
+                   value=" Bestehendes Location Event bearbeiten"></p:outputLabel>
+
+</f:facet>
+<div class="ui-g-12 ui-md-12">
+    <b:row>
+        <h:form id="myTabForm">
+            <p:growl id="locationEventGrowl" life="2000"/>
+            <p:defaultCommand target="dummy"/>
+            <p:commandButton id="dummy" process="@none" global="false" style="display:none;"/>
+
+
+            <p:panel>
+                <p:tabView id="locationTabView" widgetVar="locationTabView"
+                           onTabChange="PF('hikeLocationEventDialogWidget').initPosition();"
+                           activeIndex="0" cache="false" dynamic="false"
+                           onTabShow="PF('hikeLocationEventDialogWidget').initPosition();">
+                    <p:tab id="firstTab" title="Aufgabe">
+
+                        <p:textEditor id="locationEvent_text" widgetVar="textEditorWidget"
+                                      value="#{hikeeventBean.hikeevent.locationevent_text}" height="200">
+                        </p:textEditor>
+                        <p:message for="locationEvent_text" display="text" id="locationEvent_text_text"/>
+
+
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+                                     styleClass="ui-panelgrid-blank">
+                            <p:outputLabel for="locationevent_points" value="Punkte: "/>
+                            <b:column>
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                        <p:spinner id="locationevent_points"
+                                                   value="#{hikeeventBean.hikeevent.locationevent_points}"/>
+                                    </div>
+                                </div>
+                            </b:column>
+
+
+                            <p:outputLabel for="hikeevent_startByLocation"
+                                           value="Wann soll das Event gestartet werden?"></p:outputLabel>
+                            <b:column>
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                        <p:selectOneButton id="hikeevent_startByLocation"
+                                                           unselectable="false"
+                                                           value="#{hikeeventBean.hikeevent.startByLocation}">
+                                            <f:selectItem itemLabel="bei Erreichen" itemValue="#{true}"/>
+                                            <f:selectItem itemLabel="direkt starten" itemValue="#{false}"/>
+                                            <p:ajax event="change" update="hikeevent_ort hikeevent_ort_map"
+                                                    process="@this"/>
+                                        </p:selectOneButton>
+                                    </div>
+                                </div>
+                            </b:column>
+
+
+                            <p:outputLabel for="hikeevent_ort"
+                                           value="Wo soll das Event auftreten?"></p:outputLabel>
+                            <b:column>
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                        <div class="ui-inputgroup">
+                                            <p:inputText value="#{hikeeventBean.hikeevent.location}"
+                                                         styleClass="ui-g-10 ui-md-10 ui-lg-10"
+                                                         disabled="#{ not hikeeventBean.hikeevent.startByLocation}"
+                                                         name="ort"
+                                                         required="#{ hikeeventBean.hikeevent.startByLocation}"
+                                                         requiredMessage="#{valmsg['error_hikeevent_location_NULL']}"
+                                                         id="hikeevent_ort">
+                                                <f:converter converterId="GPSPointConverter"/>
+                                            </p:inputText>
+                                            <p:commandButton id="hikeevent_ort_map" styleClass="ui-g-4 ui-md-4 ui-lg-4 "
+                                                             disabled="#{ not hikeeventBean.hikeevent.startByLocation}"
+                                                             icon="fa fa-map"
+                                                             oncomplete=" getHikesectionDateJSF();   PF('choosePointDialogHikeSectionWidget').show();   "
+                                                             process="@this">
+                                            </p:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p:message for="hikeevent_ort" display="text" id="hikeevent_ort_text"
+                                           styleClass="ui-g-0 ui-md-0 ui-lg-0"/>
+                            </b:column>
+
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab id="secondTab" title="Zielkoordinaten">
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                        <div class="ui-inputgroup">
+                                            <p:inputText widgetVar="UPDATE"
+                                                         value="#{hikeeventBean.hikeevent.locationevent_locationToGo}"
+                                                         name="locationToGo"
+                                                         styleClass="form-control" id="locationevent_ort">
+                                                <f:converter converterId="GPSPointConverter"/>
+                                            </p:inputText>
+                                            <p:commandButton
+                                                    action="#{hikeeventBean.setChooseLocationInvoker('Location_goal')}"
+                                                    id="hikeevent_ziel_map" icon="fa fa-map"
+                                                    oncomplete="getChooseLocationInvokerJSF(); getHikesectionDateJSF();   PF('choosePointDialogHikeSectionWidget').show();   "
+                                                    styleClass="btn btn-success" process="@this">
+                                            </p:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            <p:message for="locationevent_ort" display="text"
+                                       id="locationevent_ort_message"/>
+                    </p:tab>
+                    <p:tab id="thirdTab" title="Optionen">
+                        <div class="ui-fluid">
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-5,ui-grid-col-7" layout="grid"
+                                         styleClass="ui-panelgrid-blank">
+                                <h:outputLabel for="locationevent_findmandatory"
+                                               value="Erreichen notwendig um fort zu fahren?">
+                                </h:outputLabel>
+                                <p:inputSwitch styleClass="form-control" id="locationevent_findmandatory"
+                                               value="#{hikeeventBean.hikeevent.locationevent_findmandatory}">
+                                </p:inputSwitch>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-5,ui-grid-col-7" layout="grid"
+                                         styleClass="ui-panelgrid-blank">
+                                <p:outputLabel value="Was soll dem Spieler angezeigt werden?"></p:outputLabel>
+                                <p:selectOneMenu styleClass="form-control" id="locationevent_showmapnotarrow"
+                                                 required="true" unselectable="false"
+                                                 value="#{hikeeventBean.hikeevent.locationevent_showmapnotarrow}">
+                                    <f:selectItem itemLabel="show map" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="show directional arrow" itemValue="#{false}"/>
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                        </div>
+                    </p:tab>
+                </p:tabView>
+
+                <f:facet name="footer">
+                    <p:column>
+                        <p:commandButton id="newBtn" rendered="#{hikeeventBean.hikeevent.id eq null}"
+                                         value="#{msg['btnLabel_save']}"
+                                         styleClass="ui-button  ui-state-default light-green-button"
+                                         action="#{hikeeventBean.create}"
+                                         update="locationEventGrowl @form"
+                                         process="@form"
+                                         oncomplete=" showFirstInvalidTab(); PF('hikeLocationEventDialogWidget').initPosition(); hideDialogOnSuccess(args, 'hikeLocationEventDialogWidget');"
+                                         resetValues="true"
+                        >
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+
+                        </p:commandButton>
+                        <p:commandButton id="updateBtn" rendered="#{hikeeventBean.hikeevent.id ne null}"
+                                         value="#{msg['btnLabel_save']}"
+                                         action="#{hikeeventBean.update}"
+                                         styleClass="ui-button  ui-state-default light-green-button"
+                                         update="locationEventGrowl @form"
+                                         process="@form"
+                                         oncomplete="showFirstInvalidTab(); PF('hikeLocationEventDialogWidget').initPosition(); hideDialogOnSuccess(args, 'hikeLocationEventDialogWidget'); "
+                                         resetValues="true"
+
+                        >
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener"/>
+
+                        </p:commandButton>
+                        <p:commandButton id="cancelBtn" value="#{msg['btnLabel_cancel']}"
+                                         oncomplete="PF('hikeLocationEventDialogWidget').hide();"
+                                         styleClass="ui-button  ui-state-default light-red-button"
+                                         process="@this"/>
+                    </p:column>
+                </f:facet>
+            </p:panel>
+
+        </h:form>
+    </b:row>
+</div>
+</html>

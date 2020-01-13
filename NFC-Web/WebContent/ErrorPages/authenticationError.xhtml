@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+<ui:composition template="/templates/template.xhtml">
+
+    <ui:define name="title">Anmeldung</ui:define>
+
+    <ui:define name="meta">
+        <meta http-equiv="refresh" content="3;url=#{request.contextPath}/signin"/>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h4>Anmeldung fehlerhaft</h4>
+                <p>
+                    <a href="#{request.contextPath}/signin">Click here if redirect didn't work or when you're impatient</a>.
+                </p>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                Die Anmeldung ist leider gescheitert. Bitte versuche es doch noch einmal!
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+</html>

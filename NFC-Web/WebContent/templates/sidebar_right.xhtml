@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+
+<h:head></h:head>
+<h:body>
+    <ui:composition>
+        <p:sidebar widgetVar="sidebar_right" position="right" id="sidebar_right" baseZIndex="10000">
+            <h1 style="font-weight:normal">Add something</h1>
+            <o:importConstants type="pictures.taking.washing.persistence.enums.EventEnum"/>
+            <o:importConstants type="pictures.taking.washing.persistence.entities.Events.InformationEvent"/>
+            <c:forEach items="#{EventEnum}" var="entry">
+                <p:outputPanel>
+                    <p:commandButton rendered="#{entry.key == EventEnum.InformationEvent}" value="InformationEvent"
+                                     update="@widgetVar(hikeInformationEventDialogWidget)"
+                                     action="#{hikeeventBean.init(EventEnum.InformationEvent)}"
+                                     oncomplete="PF('hikeInformationEventDialogWidget').show();PF('sidebar_right').hide();"/>
+                    <p:commandButton rendered="#{entry.key == EventEnum.LocationEvent}" value="Loocationevent"
+                                     update="@widgetVar(hikeLocationEventDialogWidget)"
+                                     action="#{hikeeventBean.init(EventEnum.LocationEvent)}"
+                                     oncomplete="PF('hikeLocationEventDialogWidget').show();PF('sidebar_right').hide();"/>
+
+                </p:outputPanel>
+            </c:forEach>
+
+            <p:commandButton value="Cancel" oncomplete="PF('sidebar_right').hide()"/>
+        </p:sidebar>
+    </ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+        <!-- <exclusions> -->
+        <!-- <module name="org.jboss.resteasy.resteasy-jackson-provider"/> -->
+        <!--&lt;!&ndash; </exclusions> &ndash;&gt;-->
+        <exclusions>
+            <module name="org.antlr"/>
+            <!--<module name="javaee.api" />-->
+            <!--<module name="javax.ws.rs.api"/>-->
+            <!--<module name="org.jboss.resteasy.resteasy-jaxrs" />-->
+            <!--<module name="org.postgresql" />-->
+            <!--&lt;!&ndash;<module name="org.hibernate"/>&ndash;&gt;-->
+            <!--<module name="org.apache.commons.logging" />-->
+            <!--<module name="org.apache.log4j" />-->
+            <!--<module name="org.jboss.logging" />-->
+            <!--<module name="org.jboss.logging.jul-to-slf4j-stub" />-->
+            <!--<module name="org.jboss.logmanager" />-->
+            <!--<module name="org.jboss.logmanager.log4j" />-->
+            <!--<module name="org.slf4j" />-->
+            <!--<module name="org.slf4j.impl" />-->
+        </exclusions>
+        <!--<local-last value="true" />-->
+        <dependencies>
+            <module name="org.postgresql"/>
+            <module name="org.jboss.resteasy.resteasy-jackson2-provider"
+                    services="import"/>
+            <module name="org.dom4j"/>
+            <!--<module name="org.slf4j" />-->
+            <!--<module name="org.dom4j"/>-->
+
+        </dependencies>
+        <!-- <dependencies> -->
+        <!-- <module name="com.nimbusds.nimbus-jose-jwt" services="import" export="true"/> -->
+        <!-- </dependencies> -->
+        <exclude-subsystems>
+            <subsystem name="logging"/>
+            <!--<subsystem name="resteasy" />-->
+        </exclude-subsystems>
+    </deployment>
+</jboss-deployment-structure> 

@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">
+
+
+<ui:composition template="/templates/template.xhtml">
+
+    <ui:define name="title">
+
+        <h:outputText rendered="#{userBean.userId eq null }" value="Neuen Acount erstellen"/>
+        <h:outputText rendered="#{userBean.userId ne null}" value="#{userBean.userId} bearbeiten"/>
+
+    </ui:define>
+
+    <ui:define name="content">
+
+        <f:metadata>
+            <f:viewParam name="id" value="#{userBean.userId}"/>
+            <f:event listener="#{userBean.init()}" type="preRenderView"/>
+        </f:metadata>
+        <!-- ################################################################################## -->
+        <div class="ui-g">
+            <div class="ui-g-0 ui-md-1 ui-lg-3"></div>
+            <div class="container-fluid ui-g-12 ui-md-10 ui-lg-6">
+                <b:row>
+
+                    <h:form styleClass="form-horizontal" id="userForm" name="userForm">
+                        <p:panel id="basic" header="#{msg['label_account_new']}">
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+                                         styleClass="ui-panelgrid-blank" id="registerGrid">
+                                <p:column>
+                                    <p:outputLabel value="#{msg['label_username']}" for="userName"/>
+                                </p:column>
+                                <p:column>
+                                    <div class="ui-fluid">
+                                        <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+                                                <p:inputText value="#{userBean.user.userName}" name="userName"
+                                                             id="userName">
+                                                    <p:ajax event="blur" update="@this username_text" process="@this"/>
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:message for="userName" display="text" id="username_text"/>
+                                </p:column>
+                                <p:outputLabel value="#{msg['label_email']}" for="email"/>
+                                <p:column>
+                                    <div class=" ui-fluid">
+                                        <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-envelope"></i></span>
+                                                <p:inputText value="#{userBean.user.email}" name="email"
+                                                             styleClass="form-control" id="email">
+                                                    <p:ajax event="blur" update="@this email_text" process="@this"/>
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:message for="email" display="text" id="email_text"/>
+                                </p:column>
+                                <p:outputLabel value="#{msg['label_password']}" for="pwd1"/>
+                                <p:column>
+                                    <div class="ui-fluid">
+                                        <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-key"></i></span>
+                                                <p:password styleClass="form-control" id="pwd1"
+                                                            value="#{userBean.user.password}" match="pwd2"
+                                                            feedback="true" inline="true"
+                                                            promptLabel="#{msg['label_security']}"
+                                                            weakLabel="#{msg['label_security_weak']}"
+                                                            goodLabel="#{msg['label_security_good']}"
+                                                            strongLabel="#{msg['label_security_strong']}"
+                                                            validatorMessage="#{valmsg['error_password_EQUALITY']}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:message for="pwd1" display="text"/>
+                                </p:column>
+
+
+                                <p:outputLabel value="#{msg['label_password_retype']}" for="pwd2"/>
+                                <p:column>
+                                    <div class="ui-fluid">
+                                        <div class="ui-g-12 ui-md-12 ui-lg-12 ">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-key"></i></span>
+                                                <p:password styleClass="form-control" id="pwd2"
+                                                            value="#{userBean.user.password}" feedback="true"
+                                                            inline="true"
+                                                            promptLabel="#{msg['label_security']}"
+                                                            weakLabel="#{msg['label_security_weak']}"
+                                                            goodLabel="#{msg['label_security_good']}"
+                                                            strongLabel="#{msg['label_security_strong']}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:message for="pwd2" display="text"/>
+                                </p:column>
+
+                                <p:column>
+                                    <h:outputLabel value="#{msg['label_termsAndConditions']}" for="acceptAGB"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectBooleanButton id="acceptAGB" value="#{userBean.user.agreedToAGB}"
+                                                           onLabel="#{msg['label_yes']}" offLabel="#{msg['label_no']}"
+                                                           onIcon="ui-icon-check " offIcon="ui-icon-close"/>
+                                    <p:message for="acceptAGB" display="text"/>
+                                </p:column>
+                                <p:column>
+                                </p:column>
+
+                                <p:column>
+                                    <!--<div class="ui-g-12 ui-md-12 ui-lg-12">-->
+                                    <!--<p:captcha id="captcha" label="Captcha" language="#{localeBean.locale}" required="true" requiredMessage="#{valmsg['error_captcha_DONE']}" />-->
+                                    <!--<p:message for="captcha" display="text" />-->
+                                    <!--</div>-->
+                                    <p:commandButton action="#{userBean.create()}"
+                                                     value="#{msg['btnLabel_CreateAccount']}"
+                                                     styleClass="ui-g-12 ui-md-12 ui-lg-12 light-green-button"
+                                                     update="registerGrid messageGrowl" icon="ui-icon-check">
+                                    </p:commandButton>
+                                </p:column>
+                            </p:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </b:row>
+            </div>
+            <div class="ui-g-0 ui-md-1 ui-lg-3"></div>
+        </div>
+    </ui:define>
+    <ui:define name="scripts">
+        <h:outputScript library="js" name="https://www.google.com/recaptcha/api.js"></h:outputScript>
+    </ui:define>
+</ui:composition>
+</html>

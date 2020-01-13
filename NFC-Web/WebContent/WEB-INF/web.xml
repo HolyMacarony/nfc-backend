@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="3.1"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <display-name>TradereWeb</display-name>
+
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>com.ocpsoft.pretty.BASE_PACKAGES</param-name>
+        <param-value>pictures.taking.washing.web</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Production</param-value>
+    </context-param>
+
+    <mime-mapping>
+        <extension>xhtml</extension>
+        <mime-type>application/xml</mime-type>
+    </mime-mapping>
+
+    <context-param>
+        <param-name>primefaces.SUBMIT</param-name>
+        <param-value>partial</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>
+            javax.faces.WEBAPP_RESOURCES_DIRECTORY
+        </param-name>
+        <param-value>/WEB-INF/resources</param-value>
+    </context-param>
+
+
+    <!-- 		<filter> -->
+    <!--     		<filter-name>FlashScopeFixerFilter</filter-name> -->
+    <!--     		<filter-class>FlashScopeFixerFilter</filter-class> -->
+    <!-- 		</filter> -->
+    <!-- 		<filter-mapping> -->
+    <!--     		<filter-name>FlashScopeFixerFilter</filter-name> -->
+    <!--     		<url-pattern>*</url-pattern> -->
+    <!-- 		</filter-mapping> -->
+
+    <!--<context-param>-->
+    <!--<param-name>com.sun.faces.enableViewStateIdRendering</param-name>-->
+    <!--&lt;!&ndash; Prevent duplicate javax.faces.ViewState element IDs. &ndash;&gt;-->
+    <!--<param-value>false</param-value>-->
+    <!--</context-param>-->
+
+
+    <!--Session Invalidation -->
+    <!--<context-param>-->
+    <!--<param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>-->
+    <!--<param-value>true</param-value>-->
+    <!--</context-param>-->
+
+    <!--<context-param>-->
+    <!--<param-name>javax.faces.PROJECT_STAGE</param-name>-->
+    <!--<param-value>Development</param-value>-->
+    <!--</context-param>-->
+
+
+    <!-- increase buffer size to avoid JSF1095 errors -->
+    <!--<context-param>-->
+    <!--<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>-->
+    <!--<param-value>900000</param-value>-->
+    <!--</context-param>-->
+
+    <!--<context-param>-->
+    <!--<param-name>facelets.BUFFER_SIZE</param-name>-->
+    <!--<param-value>900000</param-value>-->
+    <!--</context-param>-->
+
+    <!--  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW   -->
+
+
+    <!-- enable Hibernate @NotNull JSF Checks -->
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!-- PRIME FACES CONFIG -->
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>6LeIEE4UAAAAAHcjGisJ_ZNIpI0EbJHNskFmbIjH</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>6LeIEE4UAAAAAJNdbr6EaXq0pZyt9WGk46j5W347</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--<context-param>-->
+    <!--<param-name>org.jepsar.primefaces.theme.APPEND_CSS_RESOURCE</param-name>-->
+    <!--<param-value>custom.css</param-value>-->
+    <!--</context-param>-->
+
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>omega</param-value>
+    </context-param>
+
+    <!-- including Bootsfaces -->
+    <context-param>
+        <param-name>BootsFaces_USETHEME</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>BootsFaces_THEME</param-name>
+        <param-value>other</param-value>
+    </context-param>
+    <context-param>
+        <param-name>net.bootsfaces.get_jquery_from_cdn</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>net.bootsfaces.get_jqueryui_from_cdn</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>net.bootsfaces.get_bootstrap_from_cdn</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>net.bootsfaces.get_fontawesome_from_cdn</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <!-- REST API SETUP BEGIN -->
+    <!-- Auto scan REST service  DEPRECATED-->
+    <!--<context-param>-->
+    <!--<param-name>resteasy.scan</param-name>-->
+    <!--<param-value>true</param-value>-->
+    <!--</context-param>-->
+    <!-- this needs to be the same as resteasy servlet url-pattern -->
+    <context-param>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/api/v1</param-value>
+    </context-param>
+    <!--<listener>-->
+    <!--<listener-class>-->
+    <!--org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap-->
+    <!--</listener-class>-->
+    <!--</listener>-->
+    <!--<servlet>-->
+    <!--<servlet-name>resteasy-servlet</servlet-name>-->
+    <!--<servlet-class>-->
+    <!--org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher-->
+    <!--</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>resteasy-servlet</servlet-name>-->
+    <!--<url-pattern>/api/v1/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!-- REST API SETUP END -->
+
+    <!--Omnifaces Setup Extension hiding -->
+    <context-param>
+        <param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
+        <param-value>/*.xhtml,!/api/v1/*,!/home</param-value>
+    </context-param>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Public Resources</web-resource-name>
+            <url-pattern>/javax.faces.resource/*</url-pattern>
+            <url-pattern>/resources/*</url-pattern>
+        </web-resource-collection>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+        <!-- don't specify an auth-constraint -->
+        <!-- you can specify a user-data-constraint if desired -->
+    </security-constraint>
+
+    <!--ALL SSL-->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Washing</web-resource-name>
+            <url-pattern>*</url-pattern>
+        </web-resource-collection>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    </security-constraint>
+
+    <!-- FACES SETUP -->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+
+    <!-- LANDING PAGE -->
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
+
+    <!-- SECUREING ALL PAGES WITH DB Securityroles -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>global security constraints</web-resource-name>
+            <url-pattern>/*</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMINISTRATOR</role-name>
+            <role-name>USER</role-name>
+        </auth-constraint>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    </security-constraint>
+
+    <!-- SECUREING ADMIN PAGES -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>pages with higher security</web-resource-name>
+            <url-pattern>/delete</url-pattern>
+            <url-pattern>/send</url-pattern>
+            <url-pattern>/editUser</url-pattern>
+            <url-pattern>/userIndex</url-pattern>
+            <url-pattern>/userShow</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMINISTRATOR</role-name>
+        </auth-constraint>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    </security-constraint>
+
+
+    <!-- MAKE PUBLIC PAGES ACCESSABLE -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>REST API/ WebSocket / public pages</web-resource-name>
+            <description>
+                paths of REST API(authenticaed via JWToken), so there is no frontend login neccessary
+            </description>
+            <url-pattern>/api/v1/*</url-pattern>
+            <url-pattern>/map</url-pattern>
+            <url-pattern>/home</url-pattern>
+            <url-pattern>/register</url-pattern>
+            <url-pattern>/signin</url-pattern>
+            <url-pattern>/userSocket</url-pattern>
+            <!--<url-pattern>/test2</url-pattern>-->
+            <!--<url-pattern>/error404</url-pattern>-->
+            <!--<url-pattern>/error403</url-pattern>-->
+            <!--<url-pattern>/authenticationError</url-pattern>-->
+            <!--<url-pattern>/error</url-pattern>-->
+            <!--<url-pattern>/expired</url-pattern>-->
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>DELETE</http-method>
+            <http-method>PUT</http-method>
+        </web-resource-collection>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    </security-constraint>
+
+
+    <!-- SECUREING ALL PAGES WITH SSL/TLS -->
+    <!--<security-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<web-resource-name>Viewpoint Secure URLs</web-resource-name>-->
+    <!--<url-pattern>/*</url-pattern>-->
+    <!--</web-resource-collection>-->
+    <!--<user-data-constraint>-->
+    <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+    <!--</user-data-constraint>-->
+    <!--</security-constraint>-->
+
+    <!-- <login-config> -->
+    <!-- <auth-method>FORM</auth-method> -->
+    <!-- <realm-name>tradere</realm-name> -->
+    <!-- <form-login-config> -->
+    <!-- <form-login-page>/login.xhtml</form-login-page> -->
+    <!-- <form-error-page>/error.xhtml</form-error-page> -->
+    <!-- </form-login-config> -->
+    <!-- </login-config> -->
+
+    <!-- DECLARE AVAILABLE ROLES IN DB -->
+    <security-role>
+        <role-name>ADMINISTRATOR</role-name>
+    </security-role>
+    <security-role>
+        <role-name>USER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>GUEST</role-name>
+    </security-role>
+
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>PBKDF2DatabaseDomain</realm-name>
+        <form-login-config>
+            <form-login-page>/signin.xhtml</form-login-page>
+            <form-error-page>/ErrorPages/authenticationError.xhtml?failed=true</form-error-page>
+        </form-login-config>
+    </login-config>
+    <!-- ERROR PAGES -->
+    <error-page>
+        <error-code id="error403">403</error-code>
+        <location>/ErrorPages/error403.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code id="error404">404</error-code>
+        <location>/ErrorPages/error404.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code id="error500">500</error-code>
+        <location>/ErrorPages/error.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/ErrorPages/expired.xhtml</location>
+    </error-page>
+</web-app>

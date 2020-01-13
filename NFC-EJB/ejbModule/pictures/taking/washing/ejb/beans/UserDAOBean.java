@@ -1,0 +1,145 @@
+package pictures.taking.washing.ejb.beans;
+
+import pictures.taking.washing.ejb.dto.BaseUserData;
+import pictures.taking.washing.ejb.events.UserEvent;
+import pictures.taking.washing.ejb.events.UserNotification;
+import pictures.taking.washing.ejb.interfaces.UserDAO;
+import pictures.taking.washing.ejb.interfaces.UsergroupDAO;
+import pictures.taking.washing.persistence.entities.Hike;
+import pictures.taking.washing.persistence.entities.User;
+
+import javax.annotation.security.DeclareRoles;
+import javax.ejb.EJB;
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+
+@Stateless
+@Remote(UserDAO.class)
+@DeclareRoles(value = {"ADMINISTRATOR", "USER", "GUEST"})
+public class UserDAOBean implements UserDAO {
+    @PersistenceContext
+    private EntityManager em;
+    @Inject
+    @UserNotification
+    private Event<UserEvent> event;
+    @EJB
+    private UsergroupDAO UsergroupDAO;
+
+
+
+    @Override
+
+    public User create(User user) {
+        // user.getUsergroups().add(UsergroupDAO.getUsergroupByName(UsergroupEnum.users.name()));
+        // // DEFAULT USER GROUP
+
+        if (findByUsername(user.getUserName()) == null) {
+            em.persist(user);
+//			em.flush();
+            event.fire(new UserEvent("User angelegt!"));
+            return user;
+        }
+        event.fire(new UserEvent("Username existiert bereits!"));
+        return null;
+    }
+
+    @Override
+    public User update(User user) {
+        User updatedUser = em.merge(user);
+        event.fire(new UserEvent("User bearbeitet!"));
+        return updatedUser;
+    }
+
+    @Override
+    public Long remove(Long id) {
+        User deleteUser = find(id);
+        if (deleteUser != null) {
+            em.remove(deleteUser);
+            event.fire(new UserEvent("User gelöscht!"));
+            return id;
+        }
+        return -0l;
+    }
+
+    @Override
+    public User find(Long id) {
+        return em.find(User.class, id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        // event.fire(new UserEvent("Alle User ausgelesen!"));
+        return em.createNamedQuery(User.QUERY_FINDALL, User.class).getResultList();
+    }
+
+    @Override
+    public List<Hike> findHikeAndSectionsByHike(Hike hike) {
+        return em.createQuery("SELECT h FROM Hike h JOIN FETCH h.hikesections WHERE h = :hike ORDER BY h.createdAt DESC ", Hike.class)
+                .setParameter("hike", hike)
+                .getResultList();
+    }
+
+
+    @Override
+    public List<BaseUserData> findUsersBaseInfo() {
+//        return em.createQuery("select new BaseUserData(u.id,u.userName,avg(u.id) ) from User u LEFT JOIN Hike h on u = h.user GROUP BY u", BaseUserData.class).getResultList();
+
+        List<BaseUserData> users = em.createQuery("" +
+                "SELECT new pictures.taking.washing.ejb.dto.BaseUserData(u.id, u.userName,u.firstName,u.lastName,u.email,u.createdAt, count(h.id) ) FROM User u LEFT JOIN Hike h on u = h.user GROUP BY u.id", BaseUserData.class).getResultList();
+
+        return users;
+
+        //        return em.createQuery("SELECT new BaseUserData(c.id, c.userName,1) FROM User c ", BaseUserData.class).getResultList();
+
+    }
+
+
+    //	@Override public List<User> findByBirthday() {
+//		Calendar todaysCalendar = Calendar.getInstance();
+//		todaysCalendar.add(Calendar.MONTH, 1);
+//
+//		return em.createNamedQuery(User.QUERY_FINDBYBIRTHDAY, User.class).setParameter("day", todaysCalendar.get(Calendar.DAY_OF_MONTH)).setParameter("month", todaysCalendar.get(Calendar.MONTH)).getResultList();
+//		// .setParameter(1, todaysCalendar.get(Calendar.DAY_OF_MONTH))
+//		// .setParameter(2, todaysCalendar.get(Calendar.MONTH)).getResultList();
+//	}
+    @Override
+    public String findPasswordByEmail(String email) {
+        try {
+            return em.createNamedQuery(User.QUERY_FINDPASSWORDBYEMAIL, String.class).setParameter("email", email).setMaxResults(1).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public User findByUsername(String userName) {
+        try {
+            return em.createNamedQuery(User.QUERY_FINDBYUSERNAME, User.class).setParameter("userName", userName).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+//    @RolesAllowed(value = {"USER"})
+    public User findByEmail(String email) {
+        try {
+            return em.createNamedQuery(User.QUERY_FINDBYEMAIL, User.class).setParameter("email", email).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+}

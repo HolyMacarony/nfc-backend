@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS dashboardModel-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#dashboard.xhtml" PATH="/dashboard.xhtml"
+  SHAPE="240,145,0,0" dashboardModel-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#register.xhtml" PATH="/register.xhtml"
+  SHAPE="256,289,0,0" dashboardModel-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#*" PATH="/*" SHAPE="32,129,0,0" dashboardModel-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#*:0" NAME="item" PATH="/*" dashboardModel-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#dashboard.xhtml" NAME="output"
+    PATH="/dashboard.xhtml" TARGET="rules:#dashboard.xhtml"
+    TITLE="success" dashboardModel-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="failure::#register.xhtml" NAME="output1"
+    PATH="/register.xhtml" TARGET="rules:#register.xhtml"
+    TITLE="failure" dashboardModel-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>
