@@ -8,10 +8,10 @@ import pictures.taking.washing.persistence.entities.*;
 import pictures.taking.washing.persistence.entities.*;
 import pictures.taking.washing.persistence.enums.SecurityroleEnum;
 import pictures.taking.washing.persistence.enums.UsergroupEnum;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.PrecisionModel;
+//import com.vividsolutions.jts.geom.Coordinate;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.PrecisionModel;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -98,11 +98,11 @@ public class InitializationBean {
                 // Rechtegruppen vergeben, welche zuvor mit Security Roles versehen wurden
                 user.getUsergroups().add(UsergroupDAO.getUsergroupByName(UsergroupEnum.admins.name())); // ADMIN GROUP
 
-                GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
-                Point p1 = gf.createPoint(new Coordinate(10.34343, 60.232424));
-                Point p2 = gf.createPoint(new Coordinate(20.34343, 50.232424));
-                Point p3 = gf.createPoint(new Coordinate(30.34343, 40.232424));
-                Point p4 = gf.createPoint(new Coordinate(40.34343, 30.232424));
+//                GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
+//                Point p1 = gf.createPoint(new Coordinate(10.34343, 60.232424));
+//                Point p2 = gf.createPoint(new Coordinate(20.34343, 50.232424));
+//                Point p3 = gf.createPoint(new Coordinate(30.34343, 40.232424));
+//                Point p4 = gf.createPoint(new Coordinate(40.34343, 30.232424));
 
                 User resultUser = userDAO.create(user);
 

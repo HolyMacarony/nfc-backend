@@ -7,25 +7,18 @@
     <packaging>ejb</packaging>
     <name>NFC-EJB</name>
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <uniqueVersion>false</uniqueVersion>-->
-<!--            <id>corp1</id>-->
-<!--            <name>Corporate Repository</name>-->
-<!--            <url>file:///home/thara/testesb/in</url>-->
-<!--            <layout>default</layout>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
 
 
     <properties>
-        <wildfly.version>13.0.0.Final</wildfly.version>
-        <hibernate.version>5.3.1.Final</hibernate.version>
-        <hibernate-spatial.version>5.3.1.Final</hibernate-spatial.version>
+        <wildfly.version>18.0.1.Final</wildfly.version>
+        <hibernate.version>5.4.10.Final</hibernate.version>
+        <resteasy-version>3.0.11.Final</resteasy-version>
+
+        <!--        <hibernate-spatial.version>5.3.1.Final</hibernate-spatial.version>-->
         <!--<spring.version>5.0.6.RELEASE</spring.version>-->
         <jts.version>1.13</jts.version>
-        <postgresql.version>42.2.2</postgresql.version>
-        <postgis.version>2.2.1</postgis.version>
+<!--        <postgresql.version>42.2.2</postgresql.version>-->
+<!--        <postgis.version>2.2.1</postgis.version>-->
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.server.bom>7.1.2.GA</version.server.bom>
@@ -33,70 +26,10 @@
 
     </properties>
     <profiles>
-        <!-- Arquillian WildFly remote profile -->
-        <profile>
-            <id>arquillian-jbossas-remote</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.spec</groupId>
-                    <artifactId>jboss-javaee-7.0</artifactId>
-                    <version>${version.jboss.spec.javaee.7.0}</version>
-                    <type>pom</type>
-                    <scope>provided</scope>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.wildfly/wildfly-arquillian-container-remote -->
-                <dependency>
-                    <groupId>org.wildfly</groupId>
-                    <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>8.2.1.Final</version>
-                    <scope>test</scope>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.jboss.as/jboss-as-arquillian-container-remote -->
-                <dependency>
-                <groupId>org.jboss.as</groupId>
-                <artifactId>jboss-as-arquillian-container-remote</artifactId>
-                <version>7.2.0.Final</version>
-                <scope>test</scope>
-            </dependency>
-                <!-- https://mvnrepository.com/artifact/org.jboss.as/jboss-as-arquillian-container-domain-remote -->
-                <!--<dependency>-->
-                <!--<groupId>org.jboss.as</groupId>-->
-                <!--<artifactId>jboss-as-arquillian-container-domain-remote</artifactId>-->
-                <!--<version>7.2.0.Final</version>-->
-                <!--</dependency>-->
-                <dependency>
-                    <groupId>org.jboss.arquillian.protocol</groupId>
-                    <artifactId>arquillian-protocol-servlet</artifactId>
-                    <version>1.1.13.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
+
     </profiles>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.jboss.bom/jboss-eap-javaee7-with-tools -->
-        <!-- https://mvnrepository.com/artifact/org.jboss.bom/jboss-eap-javaee7-with-tools -->
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.bom</groupId>-->
-        <!--<artifactId>jboss-eap-javaee7-with-tools</artifactId>-->
-        <!--<version>7.1.0.GA</version>-->
-        <!--<type>pom</type>-->
-        <!--</dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-orm-jbossmodules -->
-        <!--<dependency>-->
-        <!--<groupId>org.hibernate</groupId>-->
-        <!--<artifactId>hibernate-orm-jbossmodules</artifactId>-->
-        <!--<version>5.3.1.Final</version>-->
-        <!--</dependency>-->
-
-
-        <!--<dependency>-->
-        <!--<groupId>com.github.jepsar</groupId>-->
-        <!--<artifactId>primefaces-theme-jepsar</artifactId>-->
-        <!--<version>0.9.1</version>-->
-        <!--</dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.jboss/jboss-ejb-client -->
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-ejb-client</artifactId>
@@ -302,33 +235,33 @@
             <version>1.1.2</version>
         </dependency>
         <!-- Hibernate Spatial extension provided by WildFly (we must add it) -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-spatial</artifactId>
-            <version>${hibernate-spatial.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>dom4j</groupId>
-                    <artifactId>dom4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>antlr</groupId>
-                    <artifactId>antlr</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.geolatte</groupId>
-            <artifactId>geolatte-geom</artifactId>
-            <version>1.3.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-spatial</artifactId>-->
+<!--            <version>${hibernate-spatial.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>dom4j</groupId>-->
+<!--                    <artifactId>dom4j</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>antlr</groupId>-->
+<!--                    <artifactId>antlr</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.geolatte</groupId>-->
+<!--            <artifactId>geolatte-geom</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>slf4j-api</artifactId>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <!--<dependency>-->
         <!--<groupId>com.vividsolutions</groupId>-->
         <!--<artifactId>jts</artifactId>-->
@@ -351,24 +284,24 @@
 
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.postgis</groupId>
-            <artifactId>postgis-jdbc</artifactId>
-            <version>${postgis.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>postgresql</artifactId>
-                    <groupId>org.postgresql</groupId>
-                </exclusion>
-            </exclusions>
-            <!--<scope>provided</scope>-->
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <version>${postgresql.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>net.postgis</groupId>-->
+<!--            <artifactId>postgis-jdbc</artifactId>-->
+<!--            <version>${postgis.version}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>postgresql</artifactId>-->
+<!--                    <groupId>org.postgresql</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--            &lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.github.marschall</groupId>
             <artifactId>policy-registration-factory</artifactId>
@@ -421,81 +354,93 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.6</version>
+            <version>2.10.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.6</version>
+            <version>2.10.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.6</version>
+            <version>2.10.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-hibernate4</artifactId>
-            <version>2.9.6</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.datatype</groupId>-->
+<!--            <artifactId>jackson-datatype-hibernate4</artifactId>-->
+<!--            <version>2.9.6</version>-->
+<!--        </dependency>-->
         <!--<dependency>-->
         <!--<groupId>javax.annotation</groupId>-->
         <!--<artifactId>javax.annotation-api</artifactId>-->
         <!--<version>1.3.2</version>-->
         <!--</dependency>-->
 
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.spec.javax.annotation</groupId>-->
+<!--            <artifactId>jboss-annotations-api_1.2_spec</artifactId>-->
+<!--            <version>1.0.2.Final</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>org.jboss.spec.javax.annotation</groupId>
-            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
-            <version>1.0.2.Final</version>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-            <version>1.0.1.Final</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.resteasy</groupId>-->
-        <!--<artifactId>jaxrs-api</artifactId>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.resteasy</groupId>-->
-        <!--<artifactId>resteasy-servlet-initializer</artifactId>-->
-        <!--<version>3.5.1.Final</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-multipart-provider</artifactId>
-            <version>3.6.0.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.6.0.Final</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jboss-logging</artifactId>
-                    <groupId>org.jboss.logging</groupId>
-                </exclusion>
-            </exclusions>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxb-provider</artifactId>
-            <version>3.6.0.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.resteasy</groupId>-->
-        <!--<artifactId>resteasy-client</artifactId>-->
-        <!--<version>3.5.1.Final</version>-->
-        <!--&lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
-        <!--</dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.spec.javax.ws.rs</groupId>-->
+<!--            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>-->
+<!--            <version>1.0.1.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>resteasy-jaxrs</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>resteasy-servlet-initializer</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>jaxrs-api</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>resteasy-validator-provider-11</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>resteasy-multipart-provider</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jboss.resteasy</groupId>-->
+<!--            <artifactId>resteasy-jackson2-provider</artifactId>-->
+<!--            <version>${resteasy-version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.jboss.spec.javax.jms</groupId>
             <artifactId>jboss-jms-api_2.0_spec</artifactId>
@@ -629,60 +574,60 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.1.1</version>
                 <!-- Copy PostGIS driver artifacts (drivers) and Hibernate Spatial and JTS artifacts -->
-                <executions>
+<!--                <executions>-->
 
-                    <execution>
-                        <id>copy-db-driver-module</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.postgresql</groupId>
-                                    <artifactId>postgresql</artifactId>
-                                    <version>${postgresql.version}</version>
-                                    <outputDirectory>
-                                        C:/wildfly-${wildfly.version}/modules/org/postgresql/main
-                                    </outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>net.postgis</groupId>
-                                    <artifactId>postgis-jdbc</artifactId>
-                                    <version>${postgis.version}</version>
-                                    <outputDirectory>
-                                        C:/wildfly-${wildfly.version}/modules/org/postgresql/main
-                                    </outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.hibernate</groupId>
-                                    <artifactId>hibernate-spatial</artifactId>
-                                    <version>${hibernate-spatial.version}</version>
-                                    <outputDirectory>
-                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main
-                                    </outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.vividsolutions</groupId>
-                                    <artifactId>jts</artifactId>
-                                    <version>${jts.version}</version>
-                                    <outputDirectory>
-                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main
-                                    </outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.geolatte</groupId>
-                                    <artifactId>geolatte-geom</artifactId>
-                                    <version>1.3.0</version>
-                                    <outputDirectory>
-                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main
-                                    </outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
+<!--                    <execution>-->
+<!--                        <id>copy-db-driver-module</id>-->
+<!--                        <phase>process-test-resources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifactItems>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.postgresql</groupId>-->
+<!--                                    <artifactId>postgresql</artifactId>-->
+<!--                                    <version>${postgresql.version}</version>-->
+<!--                                    <outputDirectory>-->
+<!--                                        C:/wildfly-${wildfly.version}/modules/org/postgresql/main-->
+<!--                                    </outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>net.postgis</groupId>-->
+<!--                                    <artifactId>postgis-jdbc</artifactId>-->
+<!--                                    <version>${postgis.version}</version>-->
+<!--                                    <outputDirectory>-->
+<!--                                        C:/wildfly-${wildfly.version}/modules/org/postgresql/main-->
+<!--                                    </outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.hibernate</groupId>-->
+<!--                                    <artifactId>hibernate-spatial</artifactId>-->
+<!--                                    <version>${hibernate-spatial.version}</version>-->
+<!--                                    <outputDirectory>-->
+<!--                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main-->
+<!--                                    </outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>com.vividsolutions</groupId>-->
+<!--                                    <artifactId>jts</artifactId>-->
+<!--                                    <version>${jts.version}</version>-->
+<!--                                    <outputDirectory>-->
+<!--                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main-->
+<!--                                    </outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.geolatte</groupId>-->
+<!--                                    <artifactId>geolatte-geom</artifactId>-->
+<!--                                    <version>1.3.0</version>-->
+<!--                                    <outputDirectory>-->
+<!--                                        C:/wildfly-${wildfly.version}/modules/system/layers/base/org/hibernate/main-->
+<!--                                    </outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                            </artifactItems>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
             <plugin>
                 <groupId>org.basepom.maven</groupId>

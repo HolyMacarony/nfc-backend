@@ -8,7 +8,7 @@
             <module name="org.antlr"/>
             <!--<module name="javaee.api" />-->
             <!--<module name="javax.ws.rs.api"/>-->
-            <!--<module name="org.jboss.resteasy.resteasy-jaxrs" />-->
+<!--            <module name="org.jboss.resteasy.resteasy-jaxrs" />-->
             <!--<module name="org.postgresql" />-->
             <!--&lt;!&ndash;<module name="org.hibernate"/>&ndash;&gt;-->
             <!--<module name="org.apache.commons.logging" />-->
@@ -22,10 +22,10 @@
         </exclusions>
         <!--<local-last value="true" />-->
         <dependencies>
-            <module name="org.postgresql"/>
-            <module name="org.jboss.resteasy.resteasy-jackson2-provider"
-                    services="import"/>
-            <module name="org.dom4j"/>
+<!--            <module name="org.postgresql"/>-->
+<!--            <module name="org.jboss.resteasy.resteasy-jackson2-provider"-->
+<!--                    services="import"/>-->
+<!--            <module name="org.dom4j"/>-->
             <!--<module name="org.slf4j" />-->
             <!--<module name="org.dom4j"/>-->
 
