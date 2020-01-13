@@ -87,14 +87,14 @@ public class User implements Serializable {
     // @NotNull
     // @Size(min = 1, max = 100)
     // private String email;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Media> media = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
-    @org.hibernate.annotations.OrderBy(clause = "createdAt DESC")
-    private List<Hike> hikes = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<Media> media = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    @org.hibernate.annotations.OrderBy(clause = "createdAt DESC")
+//    private List<Hike> hikes = new ArrayList<>();
 
     @Version
     @NotNull
@@ -112,43 +112,6 @@ public class User implements Serializable {
     }
 
     public User() {
-    }
-
-    public void addHike(Hike hike) {
-        this.hikes.add(hike);
-        hike.setUser(this);
-    }
-
-    public void removeHike(Hike hike) {
-        this.hikes.remove(hike);
-        hike.setUser(null);
-    }
-
-    public void addMedia(Media media) {
-        this.media.add(media);
-        media.setUser(this);
-    }
-
-    public void removeMedia(Media media) {
-        this.media.remove(media);
-        media.setUser(null);
-    }
-
-    public List<Media> getMedia() {
-        return media;
-    }
-
-    public void setMedia(List<Media> media) {
-        this.media = media;
-    }
-
-    public List<Hike> getHikes() {
-        //hikes neu laden?
-        return hikes;
-    }
-
-    public void setHikes(List<Hike> hikes) {
-        this.hikes = hikes;
     }
 
     public Set<Usergroup> getUsergroups() {

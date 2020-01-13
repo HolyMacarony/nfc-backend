@@ -5,7 +5,6 @@ import pictures.taking.washing.ejb.events.UserNotification;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
 import pictures.taking.washing.helper.MSG;
 import pictures.taking.washing.helper.ResourceBundle;
-import pictures.taking.washing.persistence.entities.Hike;
 import pictures.taking.washing.persistence.entities.User;
 
 import javax.ejb.EJB;
@@ -47,24 +46,7 @@ public class SampleBean implements Serializable {
     private User user;
 
     private Long userId;
-    private List<MediaBean> media = new ArrayList<MediaBean>();
-    private List<HikeBean> hikes = new ArrayList<HikeBean>();
 
-    public List<HikeBean> getHikes() {
-        return hikes;
-    }
-
-    public void setHikes(List<HikeBean> hikes) {
-        this.hikes = hikes;
-    }
-
-    public List<MediaBean> getMedia() {
-        return media;
-    }
-
-    public void setMedia(List<MediaBean> media) {
-        this.media = media;
-    }
 
     // private List<AddressBean> addresses = new ArrayList<AddressBean>();
     //
@@ -93,10 +75,6 @@ public class SampleBean implements Serializable {
 
         // Copy the data
 
-        hikes.clear();
-        for (Hike hike : user.getHikes()) {
-            hikes.add(new HikeBean(hike));
-        }
 
         // addresses.clear();
         // for (Address address : user.getAddresses()) {
@@ -192,52 +170,7 @@ public class SampleBean implements Serializable {
         return OUTCOME_DELETED;
     }
 
-    // ----------------------------------------------------------------------
-    // public void addAddress() {
-    // AddressBean avm = new AddressBean(new Address());
-    // avm.setEditing(true);
-    //
-    // addresses.add(avm);
-    // }
-    //
-    // public void addCommunication() {
-    // CommunicationBean cvm = new CommunicationBean(new Communication());
-    // cvm.setEditing(true);
-    //
-    // communications.add(cvm);
-    // }
-    //
-    // public void addStatement() {
-    // StatementWebBean smb = new StatementWebBean(new Statement());
-    // smb.setEditing(true);
-    //
-    // statements.add(smb);
-    // }
-    //
-    // public void addUserRatesStatement() {
-    // UserRatesStatementBean urs = new UserRatesStatementBean(new
-    // UserRatesStatement());
-    // urs.setEditing(true);
-    //
-    // userRatesStatements.add(urs);
-    // }
-    //
-    // public void removeAddress(AddressBean toBeRemoved) {
-    // addresses.remove(toBeRemoved);
-    // }
-    //
-    // public void removeCommunication(CommunicationBean toBeRemoved) {
-    // communications.remove(toBeRemoved);
-    // }
-    //
-    // public void removeStatement(StatementWebBean toBeRemoved) {
-    // statements.remove(toBeRemoved);
-    // }
-    //
-    // public void removeUserRatesStatement(UserRatesStatementBean toBeRemoved) {
-    // userRatesStatements.remove(toBeRemoved);
-    // }
-    // ----------------------------------------------------------------------
+
 
     public User getUser() {
         return user;
@@ -255,34 +188,6 @@ public class SampleBean implements Serializable {
         this.userId = userId;
     }
 
-    // public String getBirthdayFormatted() {
-    // SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    //
-    // if (null == user.getBirthday()) {
-    // return "";
-    // }
-    //
-    // return dateFormat.format(user.getBirthday());
-    // }
 
-    // public String getRelationship() {
-    //
-    // if (null == user.getRelationship()) {
-    // return "Unbekannt";
-    // }
-    //
-    // switch (user.getRelationship()) {
-    // case Colleague:
-    // return "Kollege";
-    // case Friend:
-    // return "Freund";
-    // case Family:
-    // return "Familie";
-    // case Job:
-    // return "Arbeitskollege";
-    // default:
-    // return "Unbekannt";
-    // }
-    // }
 
 }

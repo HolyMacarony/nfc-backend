@@ -5,20 +5,14 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import pictures.taking.washing.ejb.dto.BaseUserData;
 import pictures.taking.washing.ejb.events.UserEvent;
 import pictures.taking.washing.ejb.events.UserNotification;
-import pictures.taking.washing.ejb.interfaces.HikeDAO;
-import pictures.taking.washing.ejb.interfaces.HikeeventDAO;
-import pictures.taking.washing.ejb.interfaces.HikesectionDAO;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
 import pictures.taking.washing.helper.MSG;
 import pictures.taking.washing.helper.ResourceBundle;
-import pictures.taking.washing.persistence.entities.Hike;
 import pictures.taking.washing.persistence.entities.User;
 import pictures.taking.washing.web.Annotations.AuthenticatedUser;
 import pictures.taking.washing.web.Annotations.ImpersonatedUser;
 import pictures.taking.washing.web.beans.AuthenticationBean;
-import pictures.taking.washing.web.beans.HikeBean;
 import pictures.taking.washing.web.beans.LocaleBean;
-import pictures.taking.washing.web.beans.MediaBean;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -71,19 +65,13 @@ public class UserBean implements Serializable {
     @EJB
     private UserDAO userDAO;
 
-    @EJB
-    private HikesectionDAO hikesectionDAO;
 
-    @EJB
-    private HikeeventDAO hikeeventDAO;
 
-    @EJB
-    private HikeDAO hikeDAO;
+
     private User user;
     private BaseUserData userToBeDeleted;
     private Long userId;
-    private List<MediaBean> mediaBeans = new ArrayList<MediaBean>();
-    private List<HikeBean> hikeBeans = new ArrayList<HikeBean>();
+
     private boolean isEditing = false;
 
     public UserBean(User user) {
@@ -121,13 +109,7 @@ public class UserBean implements Serializable {
         this.userDAO = userDAO;
     }
 
-    public List<HikeBean> getHikeBeans() {
-        return hikeBeans;
-    }
 
-    public void setHikeBeans(List<HikeBean> hikeBeans) {
-        this.hikeBeans = hikeBeans;
-    }
 
     public void clearToBeDeletedUser() {
         setUserToBeDeleted(null);
@@ -188,10 +170,7 @@ public class UserBean implements Serializable {
         // Clear all the lists
         // Add all items (again) to the list
         //
-        user.getHikes().clear();
-        for (HikeBean hb : hikeBeans) {
-            user.getHikes().add(hb.getHike());
-        }
+
 
 //        hikeBeans.clear();
 //        for (Hike hike : hikeDAO.findAllByUser(getAuthenticatedUser)) {
@@ -284,33 +263,5 @@ public class UserBean implements Serializable {
         this.userId = userId;
     }
 
-    public List<HikeBean> getHikesPlusButton() {
-        hikeBeans.clear();
-        for (Hike hike : hikeDAO.findAllByUser((authBean.getImpersonatedUser() != null && authBean.getImpersonatedUser().getId() != null) ? authBean.getImpersonatedUser() : authBean.getAuthenticatedUser())) {
-            hikeBeans.add(new HikeBean(hike));
-        }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, 12);
-
-        Hike h = new Hike();
-        h.setId(0l);
-        h.setTitle("");
-        h.setCreatedAt(new Timestamp(cal.getTime().getTime()));
-        HikeBean hb = new HikeBean(h);
-
-        if (!hikeBeans.contains(hb)) {
-            hikeBeans.add(0, hb);
-        }
-
-        return hikeBeans;
-    }
-
-    public List<MediaBean> getMediaBeans() {
-        return mediaBeans;
-    }
-
-    public void setMediaBeans(List<MediaBean> mediaBeans) {
-        this.mediaBeans = mediaBeans;
-    }
 }

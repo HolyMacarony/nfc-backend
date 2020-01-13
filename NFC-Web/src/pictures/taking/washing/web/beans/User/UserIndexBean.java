@@ -3,10 +3,7 @@ package pictures.taking.washing.web.beans.User;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import pictures.taking.washing.ejb.dto.BaseUserData;
-import pictures.taking.washing.ejb.interfaces.HikeDAO;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
-import pictures.taking.washing.web.beans.HikeBean;
-import pictures.taking.washing.web.beans.MediaBean;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,13 +28,10 @@ public class UserIndexBean implements Serializable {
 
     @EJB
     private UserDAO userDAO;
-    @EJB
-    private HikeDAO hikeDAO;
 
 
-    private List<MediaBean> mediaBeans = new ArrayList<MediaBean>();
+
     private List<BaseUserData> userBeans = new ArrayList<>();
-    private List<HikeBean> hikeBeans = new ArrayList<HikeBean>();
 
     public List<BaseUserData> getUserBeans() {
         return userBeans;

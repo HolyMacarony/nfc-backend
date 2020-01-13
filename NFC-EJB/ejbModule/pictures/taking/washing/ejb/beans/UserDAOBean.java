@@ -5,7 +5,7 @@ import pictures.taking.washing.ejb.events.UserEvent;
 import pictures.taking.washing.ejb.events.UserNotification;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
 import pictures.taking.washing.ejb.interfaces.UsergroupDAO;
-import pictures.taking.washing.persistence.entities.Hike;
+//import pictures.taking.washing.persistence.entities.Hike;
 import pictures.taking.washing.persistence.entities.User;
 
 import javax.annotation.security.DeclareRoles;
@@ -79,12 +79,12 @@ public class UserDAOBean implements UserDAO {
         return em.createNamedQuery(User.QUERY_FINDALL, User.class).getResultList();
     }
 
-    @Override
-    public List<Hike> findHikeAndSectionsByHike(Hike hike) {
-        return em.createQuery("SELECT h FROM Hike h JOIN FETCH h.hikesections WHERE h = :hike ORDER BY h.createdAt DESC ", Hike.class)
-                .setParameter("hike", hike)
-                .getResultList();
-    }
+//    @Override
+//    public List<Hike> findHikeAndSectionsByHike(Hike hike) {
+//        return em.createQuery("SELECT h FROM Hike h JOIN FETCH h.hikesections WHERE h = :hike ORDER BY h.createdAt DESC ", Hike.class)
+//                .setParameter("hike", hike)
+//                .getResultList();
+//    }
 
 
     @Override

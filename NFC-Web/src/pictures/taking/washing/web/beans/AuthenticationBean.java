@@ -89,9 +89,7 @@ public class AuthenticationBean implements Serializable {
     private EntityManager em;
     @Inject
     private LocaleBean localeBean;
-    @Inject
-    private
-    HikeBean hikeBean;
+
     //	@Inject
     //	@AuthenticatedUser
     //	private User getAuthenticatedUser;
@@ -241,19 +239,6 @@ public class AuthenticationBean implements Serializable {
 //    public void handleRESTAuthenticationEvent(@Observes @AuthenticatedRESTUser String email) {
 //        this.authenticatedRESTUser = findUserByEmail(email);
 //    }
-
-    public void handleImpersonationEvent(@Observes @ImpersonatedUser String email) {
-        this.impersonatedUser = findUserByEmail(email);
-        hikeBean.setHike(null);
-
-
-//        this.getImpersonatedUser = this.getImpersonatedUser != null ? this.getImpersonatedUser : new User();
-    }
-
-    public void handleDeleteImpersonationEvent(@Observes @DeleteImpersonatedUser User user) {
-        this.impersonatedUser = null;
-        hikeBean.setHike(null);
-    }
 
     //	public void initParam() throws IOException
     //	{
