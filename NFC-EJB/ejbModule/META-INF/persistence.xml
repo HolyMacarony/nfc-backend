@@ -3,21 +3,24 @@
              xmlns="http://xmlns.jcp.org/xml/ns/persistence"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="Washing">
-        <jta-data-source>java:/jboss/datasources/TimeHikeDS</jta-data-source>
+        <jta-data-source>WashingDS</jta-data-source>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.show_sql" value="false"/>
+<!--            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>-->
             <!--<property name="jboss.as.jpa.providerModule" value="org.hibernate:5.3.1.Final"/>-->
 
 
             <!--<property name="hibernate.show_sql" value="true"/>-->
             <!--<property name="hibernate.format_sql" value="true"/>-->
-            <property name="hibernate.use_sql_comments" value="true"/>
+<!--            <property name="hibernate.use_sql_comments" value="true"/>-->
 
 
             <!--<property name="javax.persistence.schema-generation.scripts.action"-->
             <!--value="drop-and-create"/>-->
-            <property name="javax.persistence.schema-generation.database.action"
-            value="create"/>
+<!--            <property name="javax.persistence.schema-generation.database.action"-->
+<!--            value="create"/>-->
             <!-- <property name="javax.persistence.schema-generation.scripts.create-target" -->
             <!-- value="sampleCreate.ddl" /> -->
             <!-- <property name="javax.persistence.schema-generation.scripts.drop-target" -->
@@ -25,8 +28,8 @@
             <!-- <property name="javax.persistence.sql-load-script-source" -->
             <!-- value="insert.sql" /> -->
 
-            <property name="hibernate.default_schema" value="timehike"/>
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+<!--            <property name="hibernate.default_schema" value="washing"/>-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="create"/>-->
 
         </properties>
     </persistence-unit>
