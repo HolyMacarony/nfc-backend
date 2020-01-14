@@ -76,6 +76,6 @@ public class Usergroup implements Serializable {
     @Override
     @Transient
     public String toString() {
-        return "{Name:" + name + "}";
+        return name;
     }
 }

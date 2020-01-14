@@ -11,6 +11,8 @@ import org.hibernate.annotations.Parameter;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueEmail;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueUsername;
 import pictures.taking.washing.ejb.constraints.groupsequences.ExpensiveChecks;
+import pictures.taking.washing.persistence.enums.SecurityroleEnum;
+import pictures.taking.washing.persistence.enums.UsergroupEnum;
 import pictures.taking.washing.persistence.security.PBKDF2WithHmacSHA1;
 
 
@@ -223,6 +225,7 @@ public class User implements Serializable {
         sb.append("    cardId: ").append(toIndentedString(cardId)).append("\n");
         sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
         sb.append("    pinCode: ").append(toIndentedString(pinCode)).append("\n");
+        sb.append("    Usergroups: ").append(toIndentedString(usergroups)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -240,6 +243,15 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, cardId, balance, pinCode);
+    }
+
+    public boolean isAdmin(){
+        for (Usergroup group : this.getUsergroups()) {
+            if(group.getName().equals(UsergroupEnum.admins.name())) {
+                   return true;
+            }
+        }
+        return false;
     }
 
     @Override

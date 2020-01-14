@@ -94,10 +94,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
     public List<Machine> reservedMachines(@PathParam("userId") Long id) {
-        System.out.println(authenticatedRESTUser);
-        System.out.println(authenticatedRESTUser.getUsergroups());
-        if(id.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.getUsergroups().contains(UsergroupEnum.admins.name())){
-
+        if(id.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()){
             return userDAO.reservedMachines(id);
         }
         else{

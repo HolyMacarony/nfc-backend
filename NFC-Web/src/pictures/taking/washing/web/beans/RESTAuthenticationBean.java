@@ -37,7 +37,8 @@ public class RESTAuthenticationBean implements Serializable {
 
 
     public void setAuthenticatedRESTUser(User authenticatedRESTUser) {
-        this.authenticatedRESTUser = authenticatedRESTUser;
+        this.authenticatedRESTUser = em.merge(authenticatedRESTUser);
+        System.out.println(this.authenticatedRESTUser);
     }
 
     @Produces
@@ -60,6 +61,7 @@ public class RESTAuthenticationBean implements Serializable {
 
     public void handleRESTAuthenticationEvent(@Observes @AuthenticatedRESTUser String email) {
         this.authenticatedRESTUser = findUserByEmail(email);
+        System.out.println(this.authenticatedRESTUser);
     }}
 
 
