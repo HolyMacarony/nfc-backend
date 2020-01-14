@@ -35,6 +35,7 @@ import org.hibernate.annotations.Type;
         @NamedQuery(name = User.QUERY_FINDBYUSERNAME, query = "SELECT u FROM User u WHERE u.userName = :userName"),
         @NamedQuery(name = User.QUERY_FINDPASSWORDBYEMAIL, query = "SELECT u.password FROM User u WHERE u.email = :email"),
         @NamedQuery(name = User.QUERY_FINDRESERVEDMACHINES, query = "SELECT m FROM Machine m WHERE m.lastHoldingStartTime < :endtime AND m.user.id = :userID"),
+        @NamedQuery(name = User.QUERY_FINDBYCARDID, query = "SELECT u FROM User u WHERE u.cardId = :cardID"),
         @NamedQuery(name = User.QUERY_FINDBYEMAIL, query = "SELECT u FROM User u WHERE u.email = :email")})
 
 
@@ -50,6 +51,7 @@ public class User implements Serializable {
     public static final String QUERY_FINDPASSWORDBYEMAIL = "User.FindPasswordByEmail";
     public static final String QUERY_FINDBYBIRTHDAY = "User.FindByBirthday";
     public static final String QUERY_FINDRESERVEDMACHINES = "User.FindReservedMachines";
+    public static final String QUERY_FINDBYCARDID = "User.FindByCardId";
 
     private static final long serialVersionUID = 1L;
 

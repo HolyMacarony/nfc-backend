@@ -220,7 +220,7 @@ public class UserBean implements Serializable {
         return "pretty:userIndex";
     }
 
-    public Long delete() {
+    public User delete() {
       return  userDAO.remove(user.getId());
     }
 

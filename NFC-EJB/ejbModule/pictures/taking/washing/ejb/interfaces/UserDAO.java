@@ -13,13 +13,17 @@ public interface UserDAO {
 
     User update(User user);
 
-    Long remove(Long id);
+    User remove(Long id);
 
     User find(Long id);
 
     User findByUsername(String userName);
 
     User findByEmail(String email);
+
+    User findByCardId(Long id);
+
+    User deleteUser(Long id);
 
     String findPasswordByEmail(String userName);
 

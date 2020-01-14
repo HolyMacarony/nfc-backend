@@ -62,14 +62,14 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public Long remove(Long id) {
+    public User remove(Long id) {
         User deleteUser = find(id);
         if (deleteUser != null) {
             em.remove(deleteUser);
             event.fire(new UserEvent("User gelöscht!"));
-            return id;
+            return deleteUser;
         }
-        return -0l;
+        return null;
     }
 
     @Override
@@ -148,5 +148,22 @@ public class UserDAOBean implements UserDAO {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public User findByCardId(Long id) {
+        try {
+            return em.createNamedQuery(User.QUERY_FINDBYCARDID, User.class).setParameter("cardID", id).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public User deleteUser(Long id) {
+        return remove(id);
     }
 }
