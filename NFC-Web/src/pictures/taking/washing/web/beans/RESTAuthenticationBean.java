@@ -5,6 +5,7 @@ import pictures.taking.washing.web.Annotations.*;
 import pictures.taking.washing.web.Annotations.AuthenticatedRESTUser;
 
 import javax.annotation.security.DeclareRoles;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -36,11 +37,11 @@ public class RESTAuthenticationBean implements Serializable {
 
 
 
-    public void setAuthenticatedRESTUser(User authenticatedRESTUser) {
-        this.authenticatedRESTUser = em.merge(authenticatedRESTUser);
-        System.out.println(this.authenticatedRESTUser);
-    }
-
+//    public void setAuthenticatedRESTUser(User authenticatedRESTUser) {
+//        this.authenticatedRESTUser = em.merge(authenticatedRESTUser);
+//        System.out.println(this.authenticatedRESTUser);
+//    }
+//    @Dependent
     @Produces
     @RequestScoped
     @AuthenticatedRESTUser
@@ -55,6 +56,7 @@ public class RESTAuthenticationBean implements Serializable {
         try {
             return (User) em.createNamedQuery(User.QUERY_FINDBYEMAIL).setParameter("email", email).getSingleResult();
         } catch (NoResultException e) {
+//            return new User();
             return null;
         }
     }

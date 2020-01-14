@@ -126,6 +126,17 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
+    public Double userBalance(Long userId) {
+        try {
+            return em.createNamedQuery(User.QUERY_FINDBALANCE, Double.class).setParameter("userID", userId).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }    }
+
+    @Override
     public User findByUsername(String userName) {
         try {
             return em.createNamedQuery(User.QUERY_FINDBYUSERNAME, User.class).setParameter("userName", userName).getSingleResult();

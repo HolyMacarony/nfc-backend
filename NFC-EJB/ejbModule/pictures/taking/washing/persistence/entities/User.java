@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.validator.Min;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueEmail;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueUsername;
 import pictures.taking.washing.ejb.constraints.groupsequences.ExpensiveChecks;
@@ -36,6 +37,7 @@ import org.hibernate.annotations.Type;
         @NamedQuery(name = User.QUERY_FINDPASSWORDBYEMAIL, query = "SELECT u.password FROM User u WHERE u.email = :email"),
         @NamedQuery(name = User.QUERY_FINDRESERVEDMACHINES, query = "SELECT m FROM Machine m WHERE m.lastHoldingStartTime < :endtime AND m.user.id = :userID"),
         @NamedQuery(name = User.QUERY_FINDBYCARDID, query = "SELECT u FROM User u WHERE u.cardId = :cardID"),
+        @NamedQuery(name = User.QUERY_FINDBALANCE, query = "SELECT u.balance FROM User u WHERE u.id = :userID"),
         @NamedQuery(name = User.QUERY_FINDBYEMAIL, query = "SELECT u FROM User u WHERE u.email = :email")})
 
 
@@ -52,6 +54,7 @@ public class User implements Serializable {
     public static final String QUERY_FINDBYBIRTHDAY = "User.FindByBirthday";
     public static final String QUERY_FINDRESERVEDMACHINES = "User.FindReservedMachines";
     public static final String QUERY_FINDBYCARDID = "User.FindByCardId";
+    public static final String QUERY_FINDBALANCE = "User.FindBalance";
 
     private static final long serialVersionUID = 1L;
 
