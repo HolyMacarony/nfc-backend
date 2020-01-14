@@ -2,6 +2,7 @@ package pictures.taking.washing.ejb.interfaces;
 
 import pictures.taking.washing.ejb.dto.BaseUserData;
 //import pictures.taking.washing.persistence.entities.Hike;
+import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface UserDAO {
     User findByEmail(String email);
 
     String findPasswordByEmail(String userName);
+
+    List<Machine> reservedMachines(Long id);
 
     List<User> findAll();
 

@@ -83,15 +83,11 @@ public class InitializationBean {
             if (userDAO.findAll().size() == 0) {
                 for (int i = 0; i < 20; i++) {
                     User user2 = new User("default" + Math.random(), "test12345", "b@b.b_" + Math.random());
-                    user2.setFirstName("Default");
-                    user2.setLastName("User");
                     userDAO.create(user2);
                 }
 
                 // User anlegen
                 User user = new User("admin", "test12345", "a@a.a");
-                user.setFirstName("Admin");
-                user.setLastName("User");
 
                 String[] credentials = {"jdbc:postgresql://localhost:5432/washing", "xxx", "xxx"};
 

@@ -6,6 +6,7 @@ import pictures.taking.washing.ejb.events.UserNotification;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
 import pictures.taking.washing.ejb.interfaces.UsergroupDAO;
 //import pictures.taking.washing.persistence.entities.Hike;
+import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 
 import javax.annotation.security.DeclareRoles;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,6 +34,7 @@ public class UserDAOBean implements UserDAO {
     private Event<UserEvent> event;
     @EJB
     private UsergroupDAO UsergroupDAO;
+
 
 
 
@@ -92,7 +96,7 @@ public class UserDAOBean implements UserDAO {
 //        return em.createQuery("select new BaseUserData(u.id,u.userName,avg(u.id) ) from User u LEFT JOIN Hike h on u = h.user GROUP BY u", BaseUserData.class).getResultList();
 
         List<BaseUserData> users = em.createQuery("" +
-                "SELECT new pictures.taking.washing.ejb.dto.BaseUserData(u.id, u.userName,u.firstName,u.lastName,u.email,u.createdAt, count(h.id) ) FROM User u LEFT JOIN Hike h on u = h.user GROUP BY u.id", BaseUserData.class).getResultList();
+                "SELECT new pictures.taking.washing.ejb.dto.BaseUserData(u.id, u.userName,u.email,u.createdAt, count(h.id) ) FROM User u LEFT JOIN Hike h on u = h.user GROUP BY u.id", BaseUserData.class).getResultList();
 
         return users;
 
@@ -101,14 +105,6 @@ public class UserDAOBean implements UserDAO {
     }
 
 
-    //	@Override public List<User> findByBirthday() {
-//		Calendar todaysCalendar = Calendar.getInstance();
-//		todaysCalendar.add(Calendar.MONTH, 1);
-//
-//		return em.createNamedQuery(User.QUERY_FINDBYBIRTHDAY, User.class).setParameter("day", todaysCalendar.get(Calendar.DAY_OF_MONTH)).setParameter("month", todaysCalendar.get(Calendar.MONTH)).getResultList();
-//		// .setParameter(1, todaysCalendar.get(Calendar.DAY_OF_MONTH))
-//		// .setParameter(2, todaysCalendar.get(Calendar.MONTH)).getResultList();
-//	}
     @Override
     public String findPasswordByEmail(String email) {
         try {
@@ -116,6 +112,17 @@ public class UserDAOBean implements UserDAO {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Machine> reservedMachines(Long userID) {
+        final long ONE_MINUTE_IN_MILLIS=60000;//millisecs
+
+        Calendar date = Calendar.getInstance();
+        long t= date.getTimeInMillis();
+        Date afterAddingTenMins=new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
+
+    return em.createNamedQuery(User.QUERY_FINDRESERVEDMACHINES, Machine.class).setParameter("endtime", afterAddingTenMins).setParameter("userID", userID).getResultList();
     }
 
     @Override

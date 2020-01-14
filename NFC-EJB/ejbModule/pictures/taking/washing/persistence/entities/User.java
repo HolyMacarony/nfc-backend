@@ -1,14 +1,19 @@
 package pictures.taking.washing.persistence.entities;
 
+
+import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueEmail;
 import pictures.taking.washing.ejb.constraints.annotations.UniqueUsername;
 import pictures.taking.washing.ejb.constraints.groupsequences.ExpensiveChecks;
 import pictures.taking.washing.persistence.security.PBKDF2WithHmacSHA1;
 
-import javax.persistence.*;
+
 import javax.validation.GroupSequence;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -18,14 +23,18 @@ import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import org.hibernate.annotations.Type;
 
 @Entity
-@NamedQueries({@NamedQuery(name = User.QUERY_FINDALL, query = "SELECT u FROM User u"), @NamedQuery(name = User.QUERY_FINDBYUSERNAME, query = "SELECT u FROM User u WHERE u.userName = :userName"), @NamedQuery(name = User.QUERY_FINDBYEMAIL, query = "SELECT u FROM User u WHERE u.email = :email")})
-@NamedQuery(name = User.QUERY_FINDPASSWORDBYEMAIL, query = "SELECT u.password FROM User u WHERE u.email = :email")
+@Schema(description="A user of the system.")
+@NamedQueries({
+        @NamedQuery(name = User.QUERY_FINDALL, query = "SELECT u FROM User u"),
+        @NamedQuery(name = User.QUERY_FINDBYUSERNAME, query = "SELECT u FROM User u WHERE u.userName = :userName"),
+        @NamedQuery(name = User.QUERY_FINDPASSWORDBYEMAIL, query = "SELECT u.password FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = User.QUERY_FINDRESERVEDMACHINES, query = "SELECT m FROM Machine m WHERE m.lastHoldingStartTime < :endtime AND m.user.id = :userID"),
+        @NamedQuery(name = User.QUERY_FINDBYEMAIL, query = "SELECT u FROM User u WHERE u.email = :email")})
+
 
 @Table(name = "user")
 //@JsonIgnoreProperties(ignoreUnknown = true)
@@ -38,32 +47,26 @@ public class User implements Serializable {
     public static final String QUERY_FINDBYEMAIL = "User.FindByEmail";
     public static final String QUERY_FINDPASSWORDBYEMAIL = "User.FindPasswordByEmail";
     public static final String QUERY_FINDBYBIRTHDAY = "User.FindByBirthday";
-    private static final long serialVersionUID = 1L;
-    // public static final String JOIN_TABLE_User_Usergroup = "User_Usergroup";
-    //
-    // public static final String JOIN_TABLE_User_Usergroup_JoinColumn = "user_id";
-    //
-    // public static final String JOIN_TABLE_User_Usergroup_InverseJoinColumn =
-    // "Usergroup_id";
+    public static final String QUERY_FINDRESERVEDMACHINES = "User.FindReservedMachines";
 
-    // @JsonManagedReference(value = "user-rates-statement")
-    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval =
-    // true, fetch = FetchType.EAGER)
-    // private Set<UserRatesStatement> userRatesStatements = new
-    // HashSet<UserRatesStatement>();
-    // @JsonManagedReference(value="user-has-usergroup")
+    private static final long serialVersionUID = 1L;
+
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JsonManagedReference
     @JoinTable(name = "user_usergroup", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "usergroup_id"))
     private Set<Usergroup> usergroups = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Machine> machines = new ArrayList<>();
+
     @Id
     @JsonProperty("id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Size(min = 1, max = 50)
-    private String firstName;
-    @Size(min = 1, max = 50)
-    private String lastName;
+    private Long id = null;
+
     @NotNull(message = "{error_username_NULL}")
     @Size(min = 3, max = 100, message = "{error_username_SIZE}")
     @UniqueUsername(groups = ExpensiveChecks.class, message = "{error_username_UNIQUE}")
@@ -71,9 +74,11 @@ public class User implements Serializable {
     private String userName;
 
     @NotNull(message = "{error_email_NULL}")
+    @Schema(example = "hans@example.com", required = true, description = "")
     @Pattern(regexp = "([^.@]+)(\\.[^.@]+)*@([^.@]+\\.)+([^.@]+)", message = "{error_email_VALID}")
     @UniqueEmail(groups = ExpensiveChecks.class, message = "{error_email_UNIQUE}")
     @Column(unique = true)
+    @JsonProperty("email")
     private String email;
 
     @NotNull(message = "{error_password_NULL}")
@@ -81,20 +86,23 @@ public class User implements Serializable {
     private String password;
     @Transient
     private String password_clear;
-    @Transient
-    @AssertTrue(message = "{error_terms_ACCEPTED}")
-    private boolean agreedToAGB;
-    // @NotNull
-    // @Size(min = 1, max = 100)
-    // private String email;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private List<Media> media = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    @org.hibernate.annotations.OrderBy(clause = "createdAt DESC")
-//    private List<Hike> hikes = new ArrayList<>();
+
+
+
+    @Schema(example = "4.5", description = "")
+    @JsonProperty("balance")
+    private Double balance = null;
+
+    @Schema(example = "123123", description = "")
+    @JsonProperty("pinCode")
+    private String pinCode = null;
+
+
+    @Schema(example = "123e4567-e89b-12d3-a456-426655440000", description = "")
+    @JsonProperty("cardId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cardId = null;
+
 
     @Version
     @NotNull
@@ -105,15 +113,18 @@ public class User implements Serializable {
     private Timestamp updatedAt;
 
     public User(String username, String password, String email) {
+//        this.setId(UUID.randomUUID());
         this.setUserName(username);
         this.setPassword(password);
         this.setEmail(email);
-        this.setAgreedToAGB(true);
     }
 
     public User() {
     }
 
+    public Long getId() {
+        return id;
+    }
     public Set<Usergroup> getUsergroups() {
         return usergroups;
     }
@@ -166,29 +177,6 @@ public class User implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public String getEmail() {
         return email;
@@ -198,88 +186,76 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public boolean isAgreedToAGB() {
-        return agreedToAGB;
-    }
 
-    public void setAgreedToAGB(boolean agreedToAGB) {
-        this.agreedToAGB = agreedToAGB;
-    }
-    // public void addStatementRating(Statement statement, int rating) {
-    // UserRatesStatement userRatesStatement = new UserRatesStatement(this,
-    // statement, rating);
-    // userRatesStatements.add(userRatesStatement);
-    // statement.getUserRatesStatements().add(userRatesStatement);
-    // }
+    public void setId(Long id) {  this.id = id; }
 
-    // public void addUsergroup(Usergroup Usergroup) {
-    // Usergroups.add(Usergroup);
-    // Usergroup.getUsers().add(this);
-    // }
+    public Double getBalance() { return balance; }
+
+    public void setBalance(Double balance) { this.balance = balance; }
+
+    public String getPinCode() {  return pinCode; }
+
+    public void setPinCode(String pinCode) {  this.pinCode = pinCode; }
+
+    public Long getCardId() {  return cardId;}
+
+    public void setCardId(Long cardId) { this.cardId = cardId; }
+
+
     public User cloneUser() {
         User u = new User();
         u.setId(id);
-        // u.setAddresses(addresses);
-        // u.setBirthday(birthday);
-        // u.setCommunications(communications);
-        u.setFirstName(firstName);
-        u.setLastName(lastName);
         u.setUserName(userName);
         u.setPassword(password);
-        // u.setStatements(statements);
         u.setUsergroups(usergroups);
-        // u.setRelationship(relationship);
         u.setCreatedAt(createdAt);
-        // u.setGender(gender);
-        // u.setUpdatedAt(updatedAt);
-        // u.setUserRatesStatements(userRatesStatements);
+
         return u;
     }
 
-    // public void removeStatementRating(Statement statement) {
-    // for (Iterator<UserRatesStatement> iterator = userRatesStatements.iterator();
-    // iterator.hasNext();) {
-    // UserRatesStatement userRatesStatement = iterator.next();
-    //
-    // if (userRatesStatement.getUser().equals(this) &&
-    // userRatesStatement.getStatement().equals(statement)) {
-    // iterator.remove();
-    // userRatesStatement.getStatement().getUserRatesStatements().remove(userRatesStatement);
-    // userRatesStatement.setUser(null);
-    // userRatesStatement.setStatement(null);
-    // }
-    // }
-    // }
     @Override
     public String toString() {
-        return this.getUserName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("class User {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    email: ").append(toIndentedString(email)).append("\n");
+        sb.append("    cardId: ").append(toIndentedString(cardId)).append("\n");
+        sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
+        sb.append("    pinCode: ").append(toIndentedString(pinCode)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-        return result;
+        return Objects.hash(id, email, cardId, balance, pinCode);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (obj == null) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        User other = (User) obj;
-        if (userName == null) {
-            return other.userName == null;
-        } else {
-            return userName.equals(other.userName);
-        }
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(cardId, user.cardId) &&
+                Objects.equals(balance, user.balance) &&
+                Objects.equals(pinCode, user.pinCode);
     }
 
 

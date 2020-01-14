@@ -3,7 +3,12 @@
          version="3.1"
          xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <display-name>TradereWeb</display-name>
+    <display-name>Washing</display-name>
+
+<!--    <context-param>-->
+<!--        <param-name>resteasy.providers</param-name>-->
+<!--        <param-value>io.swagger.api.JacksonConfig</param-value>-->
+<!--    </context-param>-->
 
     <context-param>
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
@@ -243,7 +248,7 @@
 
     <!-- <login-config> -->
     <!-- <auth-method>FORM</auth-method> -->
-    <!-- <realm-name>tradere</realm-name> -->
+    <!-- <realm-name>Washing</realm-name> -->
     <!-- <form-login-config> -->
     <!-- <form-login-page>/login.xhtml</form-login-page> -->
     <!-- <form-error-page>/error.xhtml</form-error-page> -->

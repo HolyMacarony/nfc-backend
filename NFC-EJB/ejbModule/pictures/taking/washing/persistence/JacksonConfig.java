@@ -1,4 +1,4 @@
-package pictures.taking.washing.web.rest;
+package pictures.taking.washing.persistence;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;

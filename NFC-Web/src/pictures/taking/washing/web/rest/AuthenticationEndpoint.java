@@ -112,7 +112,7 @@ public class AuthenticationEndpoint {
 //			// log into Application Server (Cookie)
 //			request.login(username, password);
 //			userAuthenticatedEvent.fire(username);
-//			response.sendRedirect("/TradereWeb/index.xhtml");
+//			response.sendRedirect("/Washing/index.xhtml");
 //
 //		} catch (javax.ws.rs.ClientErrorException e) {
 //			// response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -154,7 +154,7 @@ public class AuthenticationEndpoint {
 
         // Prepare JWT with claims set
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(username).issueTime(new Date())
-                .expirationTime(cal.getTime()).jwtID(UUID.randomUUID().toString()).issuer("https://tradere.com")
+                .expirationTime(cal.getTime()).jwtID(UUID.randomUUID().toString()).issuer("https://washing.taking.pictures")
                 .build();
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
