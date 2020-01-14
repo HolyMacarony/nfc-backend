@@ -29,6 +29,7 @@ public class Securityrole implements Serializable {
     @NotNull
     private String name;
     private String displayName = "";
+    @JsonIgnore
     @ManyToMany(mappedBy = "securityroles", fetch = FetchType.LAZY)
     private Set<Usergroup> usergroups = new HashSet<>();
 
@@ -67,7 +68,7 @@ public class Securityrole implements Serializable {
         return usergroups;
     }
 
-    @JsonBackReference(value = "usergroup-has-securityrole")
+//    @JsonBackReference(value = "usergroup-has-securityrole")
     public void setUsergroups(Set<Usergroup> usergroups) {
         this.usergroups = usergroups;
     }

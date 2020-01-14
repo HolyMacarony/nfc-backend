@@ -32,7 +32,7 @@ public class Usergroup implements Serializable {
     @ManyToMany(mappedBy = "usergroups", fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<User> users = new HashSet<>();
-    @JsonManagedReference(value = "usergroup-has-securityrole")
+//    @JsonManagedReference(value = "usergroup-has-securityrole")
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "usergroup_securityrole", joinColumns = @JoinColumn(name = "usergroup_id"), inverseJoinColumns = @JoinColumn(name = "securityrole_id"))
     private Set<Securityrole> securityroles = new HashSet<>();

@@ -56,7 +56,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonIgnore
     @JoinTable(name = "user_usergroup", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "usergroup_id"))
     private Set<Usergroup> usergroups = new HashSet<>();
 
@@ -247,6 +248,7 @@ public class User implements Serializable {
         return Objects.hash(id, email, cardId, balance, pinCode);
     }
 
+    @JsonIgnore
     public boolean isAdmin(){
         for (Usergroup group : this.getUsergroups()) {
             if(group.getName().equals(UsergroupEnum.admins.name())) {

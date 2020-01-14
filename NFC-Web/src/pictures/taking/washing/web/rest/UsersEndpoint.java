@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.http.HttpStatus;
 import pictures.taking.washing.ejb.dto.BaseUserData;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
+import pictures.taking.washing.ejb.interfaces.UsergroupDAO;
 import pictures.taking.washing.persistence.entities.InlineResponse2001;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
@@ -37,6 +38,11 @@ public class UsersEndpoint {
 
     @EJB
     private UserDAO userDAO;
+    @EJB
+    private pictures.taking.washing.ejb.interfaces.SecurityroleDAO SecurityroleDAO;
+    @EJB
+    private pictures.taking.washing.ejb.interfaces.UsergroupDAO UsergroupDAO;
+
 
     @GET
     @Path("all")
@@ -133,9 +139,18 @@ public class UsersEndpoint {
     }
 
     @POST
-    @Path("create")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User createUser(User user) {
+    @Operation(summary = "Adds a new user", description = "Creates a new user.", tags = {"user"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created"),
+            @ApiResponse(responseCode = "403", description = "User with specified ID already exists "),
+            @ApiResponse(responseCode = "405", description = "Invalid input")
+    })
+    public User addUser(User user) {
+        System.out.println(user);
+//        User newUser = new User(user.getUserName(),user.getPassword(),user.getEmail());
+//        System.out.println(newUser);
         return userDAO.create(user);
     }
 
@@ -143,6 +158,11 @@ public class UsersEndpoint {
     @Secured({SecurityroleEnum.ADMINISTRATOR})
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Deletes a user", description = "Removes the user with matching ID.", tags = {"user"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
+    })
     public User deleteUser(@PathParam("id") Long id) {
         return userDAO.deleteUser(id);
     }
