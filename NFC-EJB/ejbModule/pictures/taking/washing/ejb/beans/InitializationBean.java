@@ -8,6 +8,7 @@ import pictures.taking.washing.persistence.entities.*;
 import pictures.taking.washing.persistence.entities.*;
 import pictures.taking.washing.persistence.enums.SecurityroleEnum;
 import pictures.taking.washing.persistence.enums.UsergroupEnum;
+import pictures.taking.washing.persistence.enums.WashingMachineEnum;
 //import com.vividsolutions.jts.geom.Coordinate;
 //import com.vividsolutions.jts.geom.GeometryFactory;
 //import com.vividsolutions.jts.geom.Point;
@@ -31,8 +32,6 @@ import java.util.HashSet;
 public class InitializationBean {
 
 
-
-
     @PersistenceContext
     private EntityManager em;
 
@@ -42,6 +41,8 @@ public class InitializationBean {
     private pictures.taking.washing.ejb.interfaces.UsergroupDAO UsergroupDAO;
     @EJB
     private UserDAO userDAO;
+    @EJB
+    private MachineDAO machineDAO;
 
 
     @PostConstruct
@@ -107,6 +108,14 @@ public class InitializationBean {
 
 
             }
+
+//            if (machineDAO.listMachines().size() == 0) {
+//                for (int i = 0; i < 20; i++) {
+//                    Machine machine = new Machine(i, 5+ i * 0.25 + i, 45, WashingMachineEnum.WashingMachine);
+//                    machineDAO.create(machine);
+//                }
+//                em.flush();
+//            }
         }
     }
 }

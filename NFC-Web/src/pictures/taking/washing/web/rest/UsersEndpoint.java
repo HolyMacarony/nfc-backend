@@ -9,21 +9,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.http.HttpStatus;
 import pictures.taking.washing.ejb.dto.BaseUserData;
 import pictures.taking.washing.ejb.interfaces.UserDAO;
-import pictures.taking.washing.ejb.interfaces.UsergroupDAO;
 import pictures.taking.washing.persistence.entities.InlineResponse200;
 import pictures.taking.washing.persistence.entities.InlineResponse2001;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 import pictures.taking.washing.persistence.enums.SecurityroleEnum;
-import pictures.taking.washing.persistence.enums.UsergroupEnum;
 import pictures.taking.washing.web.Annotations.AuthenticatedRESTUser;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -48,12 +46,12 @@ public class UsersEndpoint {
     private pictures.taking.washing.ejb.interfaces.UsergroupDAO UsergroupDAO;
 
 
-    @GET
-    @Path("all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAll() {
-        return userDAO.findAll();
-    }
+//    @GET
+//    @Path("all")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public List<User> getAll() {
+//        return userDAO.findAll();
+//    }
 
     @GET
     @Path("/{userId}/balance")
@@ -205,5 +203,51 @@ public class UsersEndpoint {
     })
     public User deleteUser(@PathParam("id") Long id) {
         return userDAO.deleteUser(id);
+    }
+
+
+    @POST
+    @Path("/{userId}/deduct")
+    @Secured({SecurityroleEnum.USER})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Charges the user's account", description = "Deducts the given amount from the user's account.", tags = {"user"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Not enough funds in account", content = @Content(schema = @Schema(implementation = Error.class)))
+    })
+    public User userDeduct(@PathParam("userId") Long userId, @NotNull @QueryParam("amount") Double amount) {
+        if (userId.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
+            return userDAO.userDeduct(userId, amount);
+        }
+        throw new NotAuthorizedException("not authorized");
+    }
+
+    @POST
+    @Path("/{userId}/recharge")
+    @Secured({SecurityroleEnum.ADMINISTRATOR})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Recharges the user's account", description = "Adds balance to the user's account.", tags = {"user"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation"),
+            @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
+    })
+    public User userRecharge(@PathParam("userId") Long userId, @NotNull @QueryParam("amount") Double amount) {
+        return userDAO.userRecharge(userId, amount);
+    }
+
+
+    @POST
+    @Path("/{userId}/linkCard")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured({SecurityroleEnum.ADMINISTRATOR})
+    @Operation(summary = "Links the provided card to the user's account", description = "Links the provided card to the user's account", tags = {"user"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation"),
+            @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
+    })
+    public User userLinkCard(@PathParam("userId") Long userId, @NotNull @QueryParam("cardId") Long cardId) {
+        return userDAO.userLinkCard(userId, cardId);
     }
 }

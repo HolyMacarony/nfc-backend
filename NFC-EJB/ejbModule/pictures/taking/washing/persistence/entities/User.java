@@ -77,7 +77,7 @@ public class User implements Serializable {
 
     @NotNull(message = "{error_username_NULL}")
     @Size(min = 3, max = 100, message = "{error_username_SIZE}")
-    @UniqueUsername(groups = ExpensiveChecks.class, message = "{error_username_UNIQUE}")
+//    @UniqueUsername(groups = ExpensiveChecks.class, message = "{error_username_UNIQUE}")
     @Column(unique = true)
     private String userName;
 
@@ -99,7 +99,9 @@ public class User implements Serializable {
 
     @Schema(example = "4.5", description = "")
     @JsonProperty("balance")
-    private Double balance = null;
+    @Min(0)
+    @Column(nullable = false, columnDefinition = "double precision default 0")
+    private Double balance = 0.0;
 
     @Schema(example = "123123", description = "")
     @JsonProperty("pinCode")
@@ -122,6 +124,7 @@ public class User implements Serializable {
 
     public User(String username, String password, String email) {
 //        this.setId(UUID.randomUUID());
+
         this.setUserName(username);
         this.setPassword(password);
         this.setEmail(email);

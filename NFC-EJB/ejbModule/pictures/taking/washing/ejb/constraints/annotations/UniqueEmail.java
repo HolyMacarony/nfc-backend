@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueEmailValidator.class)
+//@Constraint(validatedBy = UniqueEmailValidator.class)
 @Documented
 public @interface UniqueEmail {
     String message() default "{error_email_UNIQUE}";

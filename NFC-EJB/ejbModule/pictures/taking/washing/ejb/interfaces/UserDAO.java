@@ -5,10 +5,7 @@ import pictures.taking.washing.ejb.dto.BaseUserData;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.util.List;
-import java.util.UUID;
 
 public interface UserDAO {
 
@@ -28,11 +25,21 @@ public interface UserDAO {
 
     User deleteUser(Long id);
 
+    User userLinkCard(Long id, Long cardID);
+
+    User userDeduct(Long id, Double amount);
+
+    User userRecharge(Long id, Double amount);
+
+
+
     String findPasswordByEmail(String userName);
 
     List<Machine> reservedMachines(Long id);
 
     public Double userBalance(Long userId);
+
+
 
     List<User> findAll();
 

@@ -35,7 +35,8 @@ public class UserDAOBean implements UserDAO {
     @EJB
     private UsergroupDAO UsergroupDAO;
 
-
+    @EJB
+    private UserDAO userDAO;
 
 
     @Override
@@ -57,7 +58,7 @@ public class UserDAOBean implements UserDAO {
     @Override
     public User update(User user) {
         User updatedUser = em.merge(user);
-        event.fire(new UserEvent("User bearbeitet!"));
+//        event.fire(new UserEvent("User bearbeitet!"));
         return updatedUser;
     }
 
@@ -116,13 +117,13 @@ public class UserDAOBean implements UserDAO {
 
     @Override
     public List<Machine> reservedMachines(Long userID) {
-        final long ONE_MINUTE_IN_MILLIS=60000;//millisecs
+        final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
 
         Calendar date = Calendar.getInstance();
-        long t= date.getTimeInMillis();
-        Date afterAddingTenMins=new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
+        long t = date.getTimeInMillis();
+        Date afterAddingTenMins = new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
 
-    return em.createNamedQuery(User.QUERY_FINDRESERVEDMACHINES, Machine.class).setParameter("endtime", afterAddingTenMins).setParameter("userID", userID).getResultList();
+        return em.createNamedQuery(User.QUERY_FINDRESERVEDMACHINES, Machine.class).setParameter("endtime", afterAddingTenMins).setParameter("userID", userID).getResultList();
     }
 
     @Override
@@ -134,7 +135,8 @@ public class UserDAOBean implements UserDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
-        }    }
+        }
+    }
 
     @Override
     public User findByUsername(String userName) {
@@ -177,4 +179,47 @@ public class UserDAOBean implements UserDAO {
     public User deleteUser(Long id) {
         return remove(id);
     }
+
+    @Override
+    public User userDeduct(Long id, Double amount) {
+        User user = find(id);
+        if (user != null) {
+            if (user.getBalance() >= amount) {
+                user.setBalance(user.getBalance() - amount);
+                em.merge(user);
+                em.flush();
+//            }
+            }
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public User userRecharge(Long id, Double amount) {
+        User user = find(id);
+        if (user != null) {
+            if (amount > 0.0) {
+                user.setBalance(user.getBalance() + amount);
+                em.merge(user);
+                em.flush();
+            }
+            return user;
+        }
+        return null;
+    }
+
+
+    @Override
+    public User userLinkCard(Long id, Long cardID) {
+        User user = find(id);
+        if (user != null) {
+            user.setCardId(cardID);
+            em.merge(user);
+            em.flush();
+            return user;
+        }
+        return null;
+    }
 }
+
