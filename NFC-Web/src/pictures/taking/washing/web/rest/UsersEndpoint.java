@@ -187,8 +187,6 @@ public class UsersEndpoint {
     })
     public User addUser(User user) {
         System.out.println(user);
-//        User newUser = new User(user.getUserName(),user.getPassword(),user.getEmail());
-//        System.out.println(newUser);
         return userDAO.create(user);
     }
 

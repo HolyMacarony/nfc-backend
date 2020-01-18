@@ -134,11 +134,11 @@
             <url-pattern>/javax.faces.resource/*</url-pattern>
             <url-pattern>/resources/*</url-pattern>
         </web-resource-collection>
-        <!--<user-data-constraint>-->
-            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-        <!--</user-data-constraint>-->
-        <!-- don't specify an auth-constraint -->
-        <!-- you can specify a user-data-constraint if desired -->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+<!--         don't specify an auth-constraint -->
+<!--         you can specify a user-data-constraint if desired -->
     </security-constraint>
 
     <!--ALL SSL-->
@@ -147,9 +147,9 @@
             <web-resource-name>NFC-Web</web-resource-name>
             <url-pattern>*</url-pattern>
         </web-resource-collection>
-        <!--<user-data-constraint>-->
-            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-        <!--</user-data-constraint>-->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
 
     <!-- FACES SETUP -->
@@ -181,9 +181,9 @@
             <role-name>ADMINISTRATOR</role-name>
             <role-name>USER</role-name>
         </auth-constraint>
-        <!--<user-data-constraint>-->
-            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-        <!--</user-data-constraint>-->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
 
     <!-- SECUREING ADMIN PAGES -->
@@ -229,9 +229,9 @@
             <http-method>DELETE</http-method>
             <http-method>PUT</http-method>
         </web-resource-collection>
-        <!--<user-data-constraint>-->
-            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-        <!--</user-data-constraint>-->
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
 
 

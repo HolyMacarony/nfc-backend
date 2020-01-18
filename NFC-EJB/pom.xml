@@ -8,7 +8,6 @@
     <name>NFC-EJB</name>
 
 
-
     <properties>
         <wildfly.version>18.0.1.Final</wildfly.version>
         <hibernate.version>5.4.10.Final</hibernate.version>
@@ -24,6 +23,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.server.bom>7.1.2.GA</version.server.bom>
         <version.jboss.spec.javaee.7.0>1.1.1.Final</version.jboss.spec.javaee.7.0>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
     </properties>
     <profiles>
@@ -545,8 +546,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>8</source>
+                    <target>8</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <compilerArguments>
