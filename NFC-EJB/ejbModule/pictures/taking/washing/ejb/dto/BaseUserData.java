@@ -3,18 +3,19 @@ package pictures.taking.washing.ejb.dto;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 public class BaseUserData implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long id;
+    private UUID id;
     private String username;
 
     private String email;
     private Long hikeCount;
     private Date createdAt;
 
-    public BaseUserData(Long id, String username, String email, Date createdAt, Long hikeCount) {
+    public BaseUserData(UUID id, String username, String email, Date createdAt, Long hikeCount) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -58,11 +59,11 @@ public class BaseUserData implements Serializable {
         this.hikeCount = hikeCount;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 //import pictures.taking.washing.persistence.entities.Hike;
 
@@ -17,21 +18,21 @@ public interface MachineDAO {
 
     Machine update(Machine Machine);
 
-    Machine remove(Long id);
+    Machine remove(UUID id);
 
-    Machine find(Long id);
+    Machine find(UUID id);
 
     Machine addMachines(Machine body);
 
-    Machine deleteMachine(String apiKey, Long machineId);
+    Machine deleteMachine(String apiKey, UUID machineId);
 
-    Machine getMachineById(Long machineId);
+    Machine getMachineById(UUID machineId);
 
     List<Machine>  listAvailableMachines();
 
     List<Machine>  listMachines();
 
-    Machine machineHold(Long machineId, Long MachineId, Date timestamp);
+    Machine machineHold(UUID machineId, UUID MachineId, Date timestamp);
 
-    Machine machinePay(Long machineId, Long cardId);
+    Machine machinePay(UUID machineId, UUID cardId);
 }

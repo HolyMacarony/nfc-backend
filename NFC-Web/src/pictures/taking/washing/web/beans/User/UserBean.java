@@ -28,6 +28,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 //@Stateful
 @URLMappings(mappings = {
@@ -70,7 +71,7 @@ public class UserBean implements Serializable {
 
     private User user;
     private BaseUserData userToBeDeleted;
-    private Long userId;
+    private UUID userId;
 
     private boolean isEditing = false;
 
@@ -125,7 +126,7 @@ public class UserBean implements Serializable {
             return;
         }
 
-        if (authenticatedUser != null && userId != null && userId > 0) {
+        if (authenticatedUser != null && userId != null ) {
             user = userDAO.find(userId);
         } else {
             user = (authBean.getImpersonatedUser() != null && authBean.getImpersonatedUser().getId() != null) ? authBean.getImpersonatedUser() : authBean.getAuthenticatedUser();
@@ -255,11 +256,11 @@ public class UserBean implements Serializable {
         this.user = user;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

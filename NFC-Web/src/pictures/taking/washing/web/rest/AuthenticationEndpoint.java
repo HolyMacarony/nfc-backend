@@ -55,7 +55,7 @@ public class AuthenticationEndpoint {
     // // The authentication filter won't be executed before invoking this method
     // }
 
-    public User getUserById(@PathParam("id") Long id) {
+    public User getUserById(@PathParam("id") UUID id) {
         return userDAO.find(id);
     }
 

@@ -18,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 //import pictures.taking.washing.persistence.entities.Hike;
 
@@ -52,7 +53,7 @@ public class MachineDAOBean implements MachineDAO {
     }
 
     @Override
-    public Machine remove(Long id) {
+    public Machine remove(UUID id) {
         Machine deleteMachine = find(id);
         if (deleteMachine != null) {
             em.remove(deleteMachine);
@@ -62,7 +63,7 @@ public class MachineDAOBean implements MachineDAO {
     }
 
     @Override
-    public Machine find(Long id) {
+    public Machine find(UUID id) {
         return em.find(Machine.class, id);
     }
 
@@ -72,12 +73,12 @@ public class MachineDAOBean implements MachineDAO {
     }
 
     @Override
-    public Machine deleteMachine(String apiKey, Long machineId) {
+    public Machine deleteMachine(String apiKey, UUID machineId) {
         return null;
     }
 
     @Override
-    public Machine getMachineById(Long machineId) {
+    public Machine getMachineById(UUID machineId) {
         return null;
     }
 
@@ -92,12 +93,12 @@ public class MachineDAOBean implements MachineDAO {
     }
 
     @Override
-    public Machine machineHold(Long machineId, Long MachineId, Date timestamp) {
+    public Machine machineHold(UUID machineId, UUID MachineId, Date timestamp) {
         return null;
     }
 
     @Override
-    public Machine machinePay(Long machineId, Long cardId) {
+    public Machine machinePay(UUID machineId, UUID cardId) {
         return null;
     }
 

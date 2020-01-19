@@ -69,11 +69,25 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Machine> machines = new ArrayList<>();
 
+//    @Id
+//    @JsonProperty("id")
+//    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id = null;
+
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "uuid")
+    @Type(type = "pg-uuid")
     @Id
-    @JsonProperty("id")
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = null;
+    private UUID id;
+
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "uuid")
+    @Type(type = "pg-uuid")
+    @JsonProperty("cardId")
+    private UUID cardId;
 
     @NotNull(message = "{error_username_NULL}")
     @Size(min = 3, max = 100, message = "{error_username_SIZE}")
@@ -108,10 +122,10 @@ public class User implements Serializable {
     private String pinCode = null;
 
 
-    @Schema(example = "123e4567-e89b-12d3-a456-426655440000", description = "")
-    @JsonProperty("cardId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cardId = null;
+//    @Schema(example = "123e4567-e89b-12d3-a456-426655440000", description = "")
+//    @JsonProperty("cardId")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long cardId = null;
 
 
     @Version
@@ -133,7 +147,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
     public Set<Usergroup> getUsergroups() {
@@ -198,7 +212,7 @@ public class User implements Serializable {
     }
 
 
-    public void setId(Long id) {  this.id = id; }
+    public void setId(UUID id) {  this.id = id; }
 
     public Double getBalance() { return balance; }
 
@@ -208,9 +222,9 @@ public class User implements Serializable {
 
     public void setPinCode(String pinCode) {  this.pinCode = pinCode; }
 
-    public Long getCardId() {  return cardId;}
+    public UUID getCardId() {  return cardId;}
 
-    public void setCardId(Long cardId) { this.cardId = cardId; }
+    public void setCardId(UUID cardId) { this.cardId = cardId; }
 
 
     public User cloneUser() {

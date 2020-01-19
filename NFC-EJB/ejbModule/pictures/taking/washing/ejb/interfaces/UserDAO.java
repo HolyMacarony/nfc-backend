@@ -6,6 +6,7 @@ import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserDAO {
 
@@ -13,31 +14,31 @@ public interface UserDAO {
 
     User update(User user);
 
-    User remove(Long id);
+    User remove(UUID id);
 
-    User find(Long id);
+    User find(UUID id);
 
     User findByUsername(String userName);
 
     User findByEmail(String email);
 
-    User findByCardId(Long id);
+    User findByCardId(UUID id);
 
-    User deleteUser(Long id);
+    User deleteUser(UUID id);
 
-    User userLinkCard(Long id, Long cardID);
+    User userLinkCard(UUID id, UUID cardID);
 
-    User userDeduct(Long id, Double amount);
+    User userDeduct(UUID id, Double amount);
 
-    User userRecharge(Long id, Double amount);
+    User userRecharge(UUID id, Double amount);
 
 
 
     String findPasswordByEmail(String userName);
 
-    List<Machine> reservedMachines(Long id);
+    List<Machine> reservedMachines(UUID id);
 
-    public Double userBalance(Long userId);
+    public Double userBalance(UUID userId);
 
 
 

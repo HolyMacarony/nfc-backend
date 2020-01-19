@@ -18,6 +18,7 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @ViewScoped
 @Named
@@ -45,7 +46,7 @@ public class SampleBean implements Serializable {
 
     private User user;
 
-    private Long userId;
+    private UUID userId;
 
 
     // private List<AddressBean> addresses = new ArrayList<AddressBean>();
@@ -180,11 +181,11 @@ public class SampleBean implements Serializable {
         this.user = user;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

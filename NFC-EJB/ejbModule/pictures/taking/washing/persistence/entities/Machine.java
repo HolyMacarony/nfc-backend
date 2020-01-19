@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import pictures.taking.washing.persistence.JacksonConfig;
 import pictures.taking.washing.persistence.enums.WashingMachineEnum;
 
@@ -28,11 +30,12 @@ import java.util.UUID;
 })
 public class Machine implements Serializable {
     public static final String QUERY_FINDALL = "Machine.FindAll";
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "uuid")
+    @Type(type = "pg-uuid")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    @NotNull
-    private Long id = null;
+    private UUID id;
     private int name = 0;
     private int houseNumber = 0;
     private Double cost = null;
@@ -74,11 +77,11 @@ public class Machine implements Serializable {
      **/
 
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

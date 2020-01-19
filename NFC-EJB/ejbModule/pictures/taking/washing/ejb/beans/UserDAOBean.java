@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Stateless
@@ -63,7 +64,7 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public User remove(Long id) {
+    public User remove(UUID id) {
         User deleteUser = find(id);
         if (deleteUser != null) {
             em.remove(deleteUser);
@@ -74,7 +75,7 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public User find(Long id) {
+    public User find(UUID id) {
         return em.find(User.class, id);
     }
 
@@ -116,18 +117,18 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public List<Machine> reservedMachines(Long userID) {
-        final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+    public List<Machine> reservedMachines(UUID userID) {
+        final Long ONE_MINUTE_IN_MILLIS = 60000l;//millisecs
 
         Calendar date = Calendar.getInstance();
-        long t = date.getTimeInMillis();
+        Long t = date.getTimeInMillis();
         Date afterAddingTenMins = new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
 
         return em.createNamedQuery(User.QUERY_FINDRESERVEDMACHINES, Machine.class).setParameter("endtime", afterAddingTenMins).setParameter("userID", userID).getResultList();
     }
 
     @Override
-    public Double userBalance(Long userId) {
+    public Double userBalance(UUID userId) {
         try {
             return em.createNamedQuery(User.QUERY_FINDBALANCE, Double.class).setParameter("userID", userId).getSingleResult();
         } catch (NoResultException e) {
@@ -164,7 +165,7 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public User findByCardId(Long id) {
+    public User findByCardId(UUID id) {
         try {
             return em.createNamedQuery(User.QUERY_FINDBYCARDID, User.class).setParameter("cardID", id).getSingleResult();
         } catch (NoResultException e) {
@@ -176,12 +177,12 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public User deleteUser(Long id) {
+    public User deleteUser(UUID id) {
         return remove(id);
     }
 
     @Override
-    public User userDeduct(Long id, Double amount) {
+    public User userDeduct(UUID id, Double amount) {
         User user = find(id);
         if (user != null) {
             if (user.getBalance() >= amount) {
@@ -196,7 +197,7 @@ public class UserDAOBean implements UserDAO {
     }
 
     @Override
-    public User userRecharge(Long id, Double amount) {
+    public User userRecharge(UUID id, Double amount) {
         User user = find(id);
         if (user != null) {
             if (amount > 0.0) {
@@ -211,7 +212,7 @@ public class UserDAOBean implements UserDAO {
 
 
     @Override
-    public User userLinkCard(Long id, Long cardID) {
+    public User userLinkCard(UUID id, UUID cardID) {
         User user = find(id);
         if (user != null) {
             user.setCardId(cardID);

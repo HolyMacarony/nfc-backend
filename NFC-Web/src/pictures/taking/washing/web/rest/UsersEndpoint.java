@@ -63,10 +63,10 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public Double userBalance(@PathParam("userId") Long userId) {
+    public Double userBalance(@PathParam("userId") UUID userId) {
         System.out.println(authenticatedRESTUser);
 
-        if (userId != null && userId > 0 && authenticatedRESTUser != null) {
+        if (userId != null && authenticatedRESTUser != null) {
             System.out.println(authenticatedRESTUser);
             if (userId.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
 
@@ -112,8 +112,8 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public String getUserById(@PathParam("userId") Long id) {
-        if (id != null && id > 0) {
+    public String getUserById(@PathParam("userId") UUID id) {
+        if (id != null ) {
             if (id.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
                 try {
                     return new ObjectMapper().writeValueAsString(userDAO.find(id));
@@ -136,8 +136,8 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public String getUserByCardId(@QueryParam("cardID") Long id) {
-        if (id != null && id > 0) {
+    public String getUserByCardId(@QueryParam("cardID") UUID id) {
+        if (id != null ) {
             try {
                 return new ObjectMapper().writeValueAsString(userDAO.findByCardId(id));
             } catch (JsonProcessingException e) {
@@ -159,7 +159,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public List<Machine> reservedMachines(@PathParam("userId") Long id) {
+    public List<Machine> reservedMachines(@PathParam("userId") UUID id) {
         System.out.println(authenticatedRESTUser);
 
         if (id.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
@@ -199,7 +199,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public User deleteUser(@PathParam("id") Long id) {
+    public User deleteUser(@PathParam("id") UUID id) {
         return userDAO.deleteUser(id);
     }
 
@@ -213,7 +213,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "400", description = "Not enough funds in account", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public User userDeduct(@PathParam("userId") Long userId, @NotNull @QueryParam("amount") Double amount) {
+    public User userDeduct(@PathParam("userId") UUID userId, @NotNull @QueryParam("amount") Double amount) {
         if (userId.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
             return userDAO.userDeduct(userId, amount);
         }
@@ -230,7 +230,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public User userRecharge(@PathParam("userId") Long userId, @NotNull @QueryParam("amount") Double amount) {
+    public User userRecharge(@PathParam("userId") UUID userId, @NotNull @QueryParam("amount") Double amount) {
         return userDAO.userRecharge(userId, amount);
     }
 
@@ -245,7 +245,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public User userLinkCard(@PathParam("userId") Long userId, @NotNull @QueryParam("cardId") Long cardId) {
+    public User userLinkCard(@PathParam("userId") UUID userId, @NotNull @QueryParam("cardId") UUID cardId) {
         return userDAO.userLinkCard(userId, cardId);
     }
 }
