@@ -5,6 +5,7 @@ import pictures.taking.washing.ejb.dto.BaseUserData;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public interface UserDAO {
 
     User userRecharge(UUID id, Double amount);
 
-
+    Timestamp getTimestampPlusMinutes(Timestamp originalTime, int minutes);
 
     String findPasswordByEmail(String userName);
 

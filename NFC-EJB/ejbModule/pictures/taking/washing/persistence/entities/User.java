@@ -51,7 +51,6 @@ public class User implements Serializable {
     public static final String QUERY_FINDBYUSERNAME = "User.FindByUsername";
     public static final String QUERY_FINDBYEMAIL = "User.FindByEmail";
     public static final String QUERY_FINDPASSWORDBYEMAIL = "User.FindPasswordByEmail";
-    public static final String QUERY_FINDBYBIRTHDAY = "User.FindByBirthday";
     public static final String QUERY_FINDRESERVEDMACHINES = "User.FindReservedMachines";
     public static final String QUERY_FINDBYCARDID = "User.FindByCardId";
     public static final String QUERY_FINDBALANCE = "User.FindBalance";

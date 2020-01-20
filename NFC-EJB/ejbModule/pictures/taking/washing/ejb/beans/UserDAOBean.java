@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -92,18 +93,18 @@ public class UserDAOBean implements UserDAO {
 //    }
 
 
-    @Override
-    public List<BaseUserData> findUsersBaseInfo() {
-//        return em.createQuery("select new BaseUserData(u.id,u.userName,avg(u.id) ) from User u LEFT JOIN Hike h on u = h.user GROUP BY u", BaseUserData.class).getResultList();
-
-        List<BaseUserData> users = em.createQuery("" +
-                "SELECT new pictures.taking.washing.ejb.dto.BaseUserData(u.id, u.userName,u.email,u.createdAt, count(h.id) ) FROM User u LEFT JOIN Hike h on u = h.user GROUP BY u.id", BaseUserData.class).getResultList();
-
-        return users;
-
-        //        return em.createQuery("SELECT new BaseUserData(c.id, c.userName,1) FROM User c ", BaseUserData.class).getResultList();
-
-    }
+//    @Override
+//    public List<BaseUserData> findUsersBaseInfo() {
+////        return em.createQuery("select new BaseUserData(u.id,u.userName,avg(u.id) ) from User u LEFT JOIN Hike h on u = h.user GROUP BY u", BaseUserData.class).getResultList();
+//
+//        List<BaseUserData> users = em.createQuery("" +
+//                "SELECT new pictures.taking.washing.ejb.dto.BaseUserData(u.id, u.userName,u.email,u.createdAt, count(h.id) ) FROM User u LEFT JOIN Hike h on u = h.user GROUP BY u.id", BaseUserData.class).getResultList();
+//
+//        return users;
+//
+//        //        return em.createQuery("SELECT new BaseUserData(c.id, c.userName,1) FROM User c ", BaseUserData.class).getResultList();
+//
+//    }
 
 
     @Override
@@ -117,13 +118,20 @@ public class UserDAOBean implements UserDAO {
 
     @Override
     public List<Machine> reservedMachines(UUID userID) {
-        final Long ONE_MINUTE_IN_MILLIS = 60000l;//millisecs
-
-        Calendar date = Calendar.getInstance();
-        Long t = date.getTimeInMillis();
-        Date afterAddingTenMins = new Date(t + (10 * ONE_MINUTE_IN_MILLIS));
+        Date currDate = new Date();
+        long time = currDate.getTime();
+        Timestamp afterAddingTenMins = getTimestampPlusMinutes(new Timestamp(time),10);
 
         return em.createNamedQuery(User.QUERY_FINDRESERVEDMACHINES, Machine.class).setParameter("endtime", afterAddingTenMins).setParameter("userID", userID).getResultList();
+    }
+
+    @Override
+    public  Timestamp getTimestampPlusMinutes(Timestamp originalTime, int minutes) {
+        final Long ONE_MINUTE_IN_MILLIS = 60000l;//millisecs
+        Calendar date = Calendar.getInstance();
+//        Long t = date.getTimeInMillis();
+        Long t = originalTime.getTime();
+        return new Timestamp(t + (minutes * ONE_MINUTE_IN_MILLIS));
     }
 
     @Override

@@ -6,6 +6,7 @@ import pictures.taking.washing.persistence.entities.User;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public interface MachineDAO {
 
     List<Machine>  listMachines();
 
-    Machine machineHold(UUID machineId, UUID MachineId, Date timestamp);
+    Machine machineHold(UUID machineId, UUID UserId, Timestamp timestamp);
 
     Machine machinePay(UUID machineId, UUID cardId);
 }

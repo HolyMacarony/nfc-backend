@@ -12,7 +12,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <datasource-mapping>
-          <factory-entry name="Washing" />
+          <factory-entry name="Washing" value="313efb4f-5c64-4761-b733-329a51ea8a20" />
         </datasource-mapping>
         <naming-strategy-map />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/ejbModule/META-INF/persistence.xml" />

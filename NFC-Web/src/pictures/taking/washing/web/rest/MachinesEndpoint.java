@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import pictures.taking.washing.ejb.interfaces.MachineDAO;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
@@ -17,8 +18,14 @@ import pictures.taking.washing.web.Annotations.AuthenticatedRESTUser;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,11 +63,11 @@ public class MachinesEndpoint {
     @Path("/available")
     @Secured({SecurityroleEnum.USER})
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Lists all available machines", description = "Lists all available machines. This includes all, that are neither on hold, nor occupied. ", tags={ "machine" })
+    @Operation(summary = "Lists all available machines", description = "Lists all available machines. This includes all, that are neither on hold, nor occupied. ", tags = {"machine"})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Available machines", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Machine.class)))) })
+            @ApiResponse(responseCode = "200", description = "Available machines", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Machine.class))))})
     public List<Machine> listAvailableMachines() throws NotFoundException {
-            return machineDAO.listAvailableMachines();
+        return machineDAO.listAvailableMachines();
     }
 
 
@@ -106,6 +113,26 @@ public class MachinesEndpoint {
         if (machineId != null) {
             if (machineId.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
                 return machineDAO.find(machineId);
+            }
+        }
+        throw new NotAuthorizedException("not authorized");
+    }
+
+    @POST
+    @Path("/{machineId}/hold")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured({SecurityroleEnum.USER})
+    @Operation(summary = "Holds the machine", description = "Holds the machine for the given user for 10 minutes.", tags = {"machine"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+
+            @ApiResponse(responseCode = "400", description = "Machine already held by another user", content = @Content(schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "404", description = "Machine or user ID not found", content = @Content(schema = @Schema(implementation = Error.class)))})
+    public Machine machineHold(@PathParam("machineId") UUID machineId, @NotNull @QueryParam("userId") UUID userId, @NotNull @QueryParam("timestamp") Timestamp timestamp) throws NotFoundException {
+        if (machineId != null && userId != null && timestamp != null) {
+            if (userId.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
+                return machineDAO.machineHold(machineId, userId, timestamp);
             }
         }
         throw new NotAuthorizedException("not authorized");

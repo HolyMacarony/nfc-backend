@@ -1,6 +1,7 @@
 package pictures.taking.washing.persistence.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +14,7 @@ import pictures.taking.washing.persistence.enums.WashingMachineEnum;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -74,8 +75,8 @@ public class Machine implements Serializable {
     @Enumerated(EnumType.STRING)
     private WashingMachineEnum type;
     private Integer programDurationInMinutes = null;
-    private Date lastStartTime = null;
-    private Date lastHoldingStartTime = null;
+    private Timestamp lastStartTime = null;
+    private Timestamp lastHoldingStartTime = null;
 
     @Schema(example = "d290f1ee-6c54-4b01-90e6-d701748f0851", description = "The last user, that held this machine")
     @JsonProperty("lastHoldingUser")
@@ -183,12 +184,13 @@ public class Machine implements Serializable {
      **/
 
     @Schema(example = "2017-07-21T17:32:28Z", description = "The last time, thatthe machine was started")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     @JsonProperty("lastStartTime")
-    public Date getLastStartTime() {
+    public Timestamp getLastStartTime() {
         return lastStartTime;
     }
 
-    public void setLastStartTime(Date lastStartTime) {
+    public void setLastStartTime(Timestamp lastStartTime) {
         this.lastStartTime = lastStartTime;
     }
 
@@ -197,12 +199,13 @@ public class Machine implements Serializable {
      **/
 
     @Schema(example = "2017-07-21T17:32:28Z", description = "The last time, that someone held this machine")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     @JsonProperty("lastHoldingStartTime")
-    public Date getLastHoldingStartTime() {
+    public Timestamp getLastHoldingStartTime() {
         return lastHoldingStartTime;
     }
 
-    public void setLastHoldingStartTime(Date lastHoldingStartTime) {
+    public void setLastHoldingStartTime(Timestamp lastHoldingStartTime) {
         this.lastHoldingStartTime = lastHoldingStartTime;
     }
 
@@ -254,7 +257,7 @@ public class Machine implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("class Machine {\n");
 
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    idSSS: ").append(toIndentedString(id)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    houseNumber: ").append(toIndentedString(houseNumber)).append("\n");
         sb.append("    cost: ").append(toIndentedString(cost)).append("\n");
