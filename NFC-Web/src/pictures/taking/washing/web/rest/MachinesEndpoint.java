@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import pictures.taking.washing.ejb.interfaces.MachineDAO;
 import pictures.taking.washing.persistence.entities.Machine;
 import pictures.taking.washing.persistence.entities.User;
@@ -20,12 +19,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -137,4 +132,26 @@ public class MachinesEndpoint {
         }
         throw new NotAuthorizedException("not authorized");
     }
+
+    @POST
+    @Path("/{machineId}/pay")
+    @Secured({SecurityroleEnum.USER})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Pay for the given machine", description = "Pays for the given machine. In order to be able to pay for a machine, the user must be holding the machine in question. ", tags={ "machine" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation"),
+
+            @ApiResponse(responseCode = "400", description = "machine not held by user or not enough funds", content = @Content(schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "404", description = "Machine or card ID not found", content = @Content(schema = @Schema(implementation = Error.class))) })
+    public Machine machinePay(@PathParam("machineId") UUID machineId, @NotNull  @QueryParam("cardId") UUID cardId)throws NotFoundException {
+        if (machineId != null && cardId != null ) {
+            if (cardId.equals(authenticatedRESTUser.getCardId()) || authenticatedRESTUser.isAdmin()) {
+                return machineDAO.machinePay(machineId,cardId);
+            }
+        }
+        throw new NotAuthorizedException("not authorized");
+    }
+
+
 }

@@ -234,7 +234,7 @@ public class UserBean implements Serializable {
                 if (authBean.getImpersonatedUser() != null && authBean.getImpersonatedUser().getId() != null && authBean.getImpersonatedUser().getId().equals(user.getId())) {
                     authBean.unimpersonateUser();
                 }else{
-                    userIndexBean.init();
+//                    userIndexBean.init();
                     //                PrimeFaces.current().ajax().update("userTableWidget");
                 }
                 FacesContext.getCurrentInstance().

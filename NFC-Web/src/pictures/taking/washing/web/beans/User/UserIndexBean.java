@@ -40,12 +40,12 @@ public class UserIndexBean implements Serializable {
     public void setUserBeans(List<BaseUserData> userBeans) {
         this.userBeans = userBeans;
     }
-
-    @PostConstruct public void init() {
-
-        if (userBeans != null && !userBeans.isEmpty()) {
-            return;
-        }
-        userBeans = userDAO.findUsersBaseInfo();
-    }
+//
+//    @PostConstruct public void init() {
+//
+//        if (userBeans != null && !userBeans.isEmpty()) {
+//            return;
+//        }
+//        userBeans = userDAO.findUsersBaseInfo();
+//    }
 }

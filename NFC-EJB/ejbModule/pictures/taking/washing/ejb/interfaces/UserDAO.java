@@ -49,6 +49,6 @@ public interface UserDAO {
 
 //    List<User> findByBirthday();
 
-    List<BaseUserData> findUsersBaseInfo();
+//    List<BaseUserData> findUsersBaseInfo();
 
 }

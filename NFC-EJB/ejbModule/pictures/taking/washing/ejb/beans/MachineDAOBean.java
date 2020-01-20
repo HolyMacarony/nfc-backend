@@ -140,7 +140,16 @@ public class MachineDAOBean implements MachineDAO {
 
     @Override
     public Machine machinePay(UUID machineId, UUID cardId) {
-        return null;
+        Machine machine = find(machineId);
+        User user = userDAO.findByCardId(cardId);
+        if (machine != null && user != null) {
+            if(machine.getUser().equals(user)){
+                if (user.getBalance() >= machine.getCost()) {
+                    userDAO.userDeduct(user.getId(), machine.getCost());
+                }
+            }
+        }
+        return machine;
     }
 
 

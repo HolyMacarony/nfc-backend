@@ -93,13 +93,13 @@ public class UsersEndpoint {
     }
 
 
-    @GET
-    @Path("allBase")
-    @Secured({SecurityroleEnum.USER})
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<BaseUserData> getAllBaseInfo() {
-        return userDAO.findUsersBaseInfo();
-    }
+//    @GET
+//    @Path("allBase")
+//    @Secured({SecurityroleEnum.USER})
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public List<BaseUserData> getAllBaseInfo() {
+//        return userDAO.findUsersBaseInfo();
+//    }
 
     @GET
     @Secured({SecurityroleEnum.USER})

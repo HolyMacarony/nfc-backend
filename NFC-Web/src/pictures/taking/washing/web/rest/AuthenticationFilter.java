@@ -32,6 +32,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
+    protected static final String API_TOKEN = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..3nb82wtxtpERQQZb.yA_TwF2UBTQNwykrcJKUEpV_ezuuWD7nKHCaE9ZIfa9owXB-cn6efjjcureWH49BZRecNZzlb5Dhxq2EA9fNYsbgLC3FRt3sIxA5P7RThDctLLVzQV2j-EgUrAv9CYpOITx2RgoiXKROoCNERvxqUmgmVH9NfhZ6wUTt3uW_-jvi--k3m1U2p6xH5dK8Zj061CgYwGXSgJGIKZ-R_CTGdTB7w9JeXZtVTGTwnLIBdCxPZTqJSfbsTAHrsVeVuzK6hv7VpCekJjuJZANNmh7WQvCTLgMylRWLGbJ5eSQDQd04-IG2mZ5SLsVUJilaK1YPFvTJrxEvNg.VtTMDvJY9UhoijslmMr8YQ";
+    protected String authorizationHeader;
+
 //	@Inject
 //	@LoggedIn
 //	User getAuthenticatedUser;
@@ -53,7 +56,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) {
 
         // Get the Authorization header from the request
-        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         // Validate the Authorization header
         // if (!isTokenBasedAuthentication(authorizationHeader)) {
@@ -65,22 +68,26 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // String token = authorizationHeader
         // .substring(AUTHENTICATION_SCHEME.length()).trim();
 
-        String token = authorizationHeader;
-        // REST API CALL
-        if (token != null) {
+        //ESP ACCESS
+        if (!authorizationHeader.equals(API_TOKEN)) {
 
-            try {
-                if (!validateToken(token)) {
-                    throw new Exception();
+            String token = authorizationHeader;
+            // REST API CALL
+            if (token != null) {
+
+                try {
+                    if (!validateToken(token)) {
+                        throw new Exception();
+                    }
+
+                } catch (Exception e) {
+                    abortWithUnauthorized(requestContext);
                 }
-
-            } catch (Exception e) {
-                abortWithUnauthorized(requestContext);
             }
-        }
-        // WEB APP CALL
-        else {
-            // TODO
+            // WEB APP CALL
+            else {
+                // TODO
+            }
         }
     }
 

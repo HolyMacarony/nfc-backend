@@ -14,6 +14,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.AnnotatedElement;
@@ -37,6 +38,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Context
     private ResourceInfo resourceInfo;
 
+    protected String authorizationHeader;
+
+
     @Override
     public void filter(ContainerRequestContext requestContext) {
 
@@ -50,18 +54,24 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         Method resourceMethod = resourceInfo.getResourceMethod();
         List<SecurityroleEnum> methodRoles = extractRoles(resourceMethod);
 
-        try {
+        authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-            // Check if the user is allowed to execute the method
-            // The method annotations override the class annotations
-            if (methodRoles.isEmpty()) {
-                checkPermissions(classRoles);
-            } else {
-                checkPermissions(methodRoles);
+
+        //ESP ACCESS
+        if (!AuthenticationFilter.API_TOKEN.equals(authorizationHeader)) {
+            try {
+
+                // Check if the user is allowed to execute the method
+                // The method annotations override the class annotations
+                if (methodRoles.isEmpty()) {
+                    checkPermissions(classRoles);
+                } else {
+                    checkPermissions(methodRoles);
+                }
+
+            } catch (Exception e) {
+                requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
             }
-
-        } catch (Exception e) {
-            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 
@@ -85,7 +95,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         // Throw an Exception if the user does not have permission to execute the method
 
         boolean isAllowed = false;
-        if (authenticatedRESTUser.getId()!= null) {
+        if (authenticatedRESTUser.getId() != null) {
             // Role USER is implicit set for every authenticated user and thus not stored in the DB
             // every authenticated user is allowed to execute
             if (allowedRoles.contains(SecurityroleEnum.USER)) {
