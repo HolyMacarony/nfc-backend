@@ -82,6 +82,7 @@ public class InitializationBean {
             }
 
             if (userDAO.findAll().size() == 0) {
+                //Mocked users
                 for (int i = 0; i < 20; i++) {
                     User user2 = new User("default" + Math.random(), "test12345", "b@b.b_" + Math.random());
                     userDAO.create(user2);
@@ -108,14 +109,17 @@ public class InitializationBean {
 
 
             }
-
-//            if (machineDAO.listMachines().size() == 0) {
-//                for (int i = 0; i < 20; i++) {
-//                    Machine machine = new Machine(i, 5+ i * 0.25 + i, 45, WashingMachineEnum.WashingMachine);
-//                    machineDAO.create(machine);
-//                }
-//                em.flush();
+            //mocked machines
+//            for (Machine m : machineDAO.findAll()) {
+//                machineDAO.remove(m.getId());
 //            }
+            if (machineDAO.listMachines().size() == 0) {
+                for (int i = 0; i < 20; i++) {
+                    Machine machine = new Machine(i, 5+ i * 0.25 + i, 45, WashingMachineEnum.WashingMachine);
+                    machineDAO.create(machine);
+                }
+                em.flush();
+            }
         }
     }
 }

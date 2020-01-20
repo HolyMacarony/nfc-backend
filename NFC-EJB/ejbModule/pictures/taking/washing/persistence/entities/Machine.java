@@ -19,9 +19,19 @@ import java.util.UUID;
 
 @Entity
 @Schema(description = "A landry machine (either washing machine or dryer).")
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = Machine.QUERY_FINDAVAILABLE,
+                query = "SELECT * FROM machine m where " +
+                        "(lastStartTime ISNULL  OR ((lastStartTime + ( programdurationinminutes * interval '1 minute')) < current_timestamp))" +
+                        "AND " +
+                        "(lastholdingstarttime ISNULL OR ((lastholdingstarttime + (:holdingTime * interval '1 minute')) < current_timestamp))"
+                       , resultClass = Machine.class
+       )
+})
 @NamedQueries({
         @NamedQuery(name = Machine.QUERY_FINDALL, query = "SELECT m FROM Machine m"),
-//        @NamedQuery(name = Machine.QUERY_FINDBYUSERNAME, query = "SELECT u FROM User u WHERE u.userName = :userName"),
+//        @NamedQuery(name = Machine.QUERY_FINDAVAILABLE, query = "SELECT m FROM Machine m WHERE m.user = NULL AND m.lastStartTime + current_timestamp + ( * 'interval 1 minute')'   >" "),
 //        @NamedQuery(name = Machine.QUERY_FINDPASSWORDBYEMAIL, query = "SELECT u.password FROM User u WHERE u.email = :email"),
 //        @NamedQuery(name = Machine.QUERY_FINDRESERVEDMACHINES, query = "SELECT m FROM Machine m WHERE m.lastHoldingStartTime < :endtime AND m.user.id = :userID"),
 //        @NamedQuery(name = Machine.QUERY_FINDBYCARDID, query = "SELECT u FROM User u WHERE u.cardId = :cardID"),
@@ -30,6 +40,7 @@ import java.util.UUID;
 })
 public class Machine implements Serializable {
     public static final String QUERY_FINDALL = "Machine.FindAll";
+    public static final String QUERY_FINDAVAILABLE = "Machine.FindAvailable";
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "uuid")
@@ -65,11 +76,20 @@ public class Machine implements Serializable {
     private Integer programDurationInMinutes = null;
     private Date lastStartTime = null;
     private Date lastHoldingStartTime = null;
-    private UUID lastHoldingUserId = null;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.MERGE})
+    @Schema(example = "d290f1ee-6c54-4b01-90e6-d701748f0851", description = "The last user, that held this machine")
+    @JsonProperty("lastHoldingUser")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.MERGE})
     @JsonBackReference
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "lastHoldingUserId")
     private User user;
 
     /**
@@ -190,15 +210,7 @@ public class Machine implements Serializable {
      * The last user, that held this machine
      **/
 
-    @Schema(example = "d290f1ee-6c54-4b01-90e6-d701748f0851", description = "The last user, that held this machine")
-    @JsonProperty("lastHoldingUserId")
-    public UUID getLastHoldingUserId() {
-        return lastHoldingUserId;
-    }
 
-    public void setLastHoldingUserId(UUID lastHoldingUserId) {
-        this.lastHoldingUserId = lastHoldingUserId;
-    }
 
 
     @Override
@@ -218,12 +230,12 @@ public class Machine implements Serializable {
                 Objects.equals(programDurationInMinutes, machine.programDurationInMinutes) &&
                 Objects.equals(lastStartTime, machine.lastStartTime) &&
                 Objects.equals(lastHoldingStartTime, machine.lastHoldingStartTime) &&
-                Objects.equals(lastHoldingUserId, machine.lastHoldingUserId);
+                Objects.equals(user, machine.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, houseNumber, cost, type, programDurationInMinutes, lastStartTime, lastHoldingStartTime, lastHoldingUserId);
+        return Objects.hash(id, name, houseNumber, cost, type, programDurationInMinutes, lastStartTime, lastHoldingStartTime, user);
     }
 
     public Machine(int name, double cost, int programDurationInMinutes, WashingMachineEnum type) {
@@ -250,7 +262,7 @@ public class Machine implements Serializable {
         sb.append("    programDurationInMinutes: ").append(toIndentedString(programDurationInMinutes)).append("\n");
         sb.append("    lastStartTime: ").append(toIndentedString(lastStartTime)).append("\n");
         sb.append("    lastHoldingStartTime: ").append(toIndentedString(lastHoldingStartTime)).append("\n");
-        sb.append("    lastHoldingUserId: ").append(toIndentedString(lastHoldingUserId)).append("\n");
+        sb.append("    lastHoldingUser: ").append(toIndentedString(user)).append("\n");
         sb.append("}");
         return sb.toString();
     }

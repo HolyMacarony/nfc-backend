@@ -22,9 +22,9 @@ public interface MachineDAO {
 
     Machine find(UUID id);
 
-    Machine addMachines(Machine body);
+    Machine addMachines(Machine machine);
 
-    Machine deleteMachine(String apiKey, UUID machineId);
+    Machine deleteMachine(UUID machineId);
 
     Machine getMachineById(UUID machineId);
 

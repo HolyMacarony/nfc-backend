@@ -112,14 +112,15 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public String getUserById(@PathParam("userId") UUID id) {
+    public User getUserById(@PathParam("userId") UUID id) {
         if (id != null ) {
             if (id.equals(authenticatedRESTUser.getId()) || authenticatedRESTUser.isAdmin()) {
-                try {
-                    return new ObjectMapper().writeValueAsString(userDAO.find(id));
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    return new ObjectMapper().writeValueAsString(userDAO.find(id));
+                    userDAO.find(id);
+//                } catch (JsonProcessingException e) {
+//                    e.printStackTrace();
+//                }
             }
         }
         throw new NotAuthorizedException("not authorized");
@@ -199,7 +200,7 @@ public class UsersEndpoint {
             @ApiResponse(responseCode = "400", description = "The specified ID is not valid", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "404", description = "The specified resource was not found", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    public User deleteUser(@PathParam("id") UUID id) {
+    public User deleteUser(@PathParam("id") UUID id) throws NotFoundException{
         return userDAO.deleteUser(id);
     }
 

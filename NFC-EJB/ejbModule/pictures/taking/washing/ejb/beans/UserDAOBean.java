@@ -59,7 +59,6 @@ public class UserDAOBean implements UserDAO {
     @Override
     public User update(User user) {
         User updatedUser = em.merge(user);
-//        event.fire(new UserEvent("User bearbeitet!"));
         return updatedUser;
     }
 

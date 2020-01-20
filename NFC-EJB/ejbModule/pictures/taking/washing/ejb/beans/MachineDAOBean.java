@@ -1,6 +1,7 @@
 package pictures.taking.washing.ejb.beans;
 
 
+import org.hibernate.Query;
 import pictures.taking.washing.ejb.interfaces.MachineDAO;
 import pictures.taking.washing.ejb.interfaces.MachineDAO;
 import pictures.taking.washing.persistence.entities.Machine;
@@ -30,18 +31,18 @@ public class MachineDAOBean implements MachineDAO {
     @PersistenceContext
     private EntityManager em;
 
+    public static final int  machineHoldTime = 10;
+
 
     @EJB
     private MachineDAO MachineDAO;
 
 
     @Override
-    public Machine create(Machine Machine) {
-
-        if (getMachineById(Machine.getId()) == null) {
-            em.persist(Machine);
-//			em.flush();
-            return Machine;
+    public Machine create(Machine machine) {
+        if (getMachineById(machine.getId()) == null) {
+            em.persist(machine);
+            return machine;
         }
         return null;
     }
@@ -73,8 +74,8 @@ public class MachineDAOBean implements MachineDAO {
     }
 
     @Override
-    public Machine deleteMachine(String apiKey, UUID machineId) {
-        return null;
+    public Machine deleteMachine(UUID machineId) {
+        return remove(machineId);
     }
 
     @Override
@@ -84,7 +85,14 @@ public class MachineDAOBean implements MachineDAO {
 
     @Override
     public List<Machine> listAvailableMachines() {
-        return null;
+
+        List<Machine> machines =em.createNamedQuery(Machine.QUERY_FINDAVAILABLE, Machine.class)
+                .setParameter("holdingTime", machineHoldTime)
+                .getResultList();
+        System.out.println(em.createNamedQuery(Machine.QUERY_FINDAVAILABLE, Machine.class)
+                .setParameter("holdingTime", machineHoldTime).getParameters());
+
+        return machines;
     }
 
     @Override

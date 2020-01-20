@@ -1,6 +1,6 @@
 package pictures.taking.washing.clients;
 
-import pictures.taking.washing.ejb.events.UserEvent;
+//import pictures.taking.washing.ejb.events.UserEvent;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
@@ -35,9 +35,7 @@ public class UsersWebSocket {
         notifySessions(message);
     }
 
-    public void onEvent(@Observes UserEvent event) {
-        notifySessions(event.getMessage());
-    }
+
 
     private void notifySessions(String message) {
         for (Session session : sessions) {
