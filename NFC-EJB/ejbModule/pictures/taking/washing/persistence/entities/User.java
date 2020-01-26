@@ -135,9 +135,8 @@ public class User implements Serializable {
     @Version
     private Timestamp updatedAt;
 
-    public User(String username, String password, String email) {
-//        this.setId(UUID.randomUUID());
-
+    public User(String username, String password, String email, UUID cardId) {
+        this.setCardId(cardId);
         this.setUserName(username);
         this.setPassword(password);
         this.setEmail(email);

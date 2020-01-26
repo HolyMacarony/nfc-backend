@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 
 //import javax.inject.Inject;
@@ -48,7 +49,7 @@ public class ServiceTest {
 
     @Test
     public void testRegisterUser() throws Exception {
-        User u = new User("name", "pw", "email@email.de");
+        User u = new User("name", "pw", "email@email.de",randomUUID());
         u = userDAO.create(u);
         assertEquals("name!",u.getUserName());
     }

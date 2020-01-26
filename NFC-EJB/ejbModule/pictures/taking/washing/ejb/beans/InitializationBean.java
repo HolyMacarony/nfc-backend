@@ -23,6 +23,9 @@ import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.UUID;
+
+import static java.util.UUID.randomUUID;
 
 //import pictures.taking.washing.persistence.entities.Statement;
 
@@ -84,12 +87,13 @@ public class InitializationBean {
             if (userDAO.findAll().size() == 0) {
                 //Mocked users
                 for (int i = 0; i < 20; i++) {
-                    User user2 = new User("default" + Math.random(), "test12345", "b@b.b_" + Math.random());
+                    User user2 = new User("default" + Math.random(), "test12345", "b@b.b_" + Math.random(),randomUUID());
                     userDAO.create(user2);
                 }
 
                 // User anlegen
-                User user = new User("admin", "test12345", "a@a.a");
+                User user = new User("admin", "test12345", "a@a.a",  randomUUID());
+                User espUser = new User("esp", "esp123", "esp@esp.esp",  randomUUID());
 
                 String[] credentials = {"jdbc:postgresql://localhost:5432/washing", "xxx", "xxx"};
 
@@ -103,6 +107,7 @@ public class InitializationBean {
 //                Point p4 = gf.createPoint(new Coordinate(40.34343, 30.232424));
 
                 User resultUser = userDAO.create(user);
+                 resultUser = userDAO.create(espUser);
 
 
                 em.flush();
@@ -115,7 +120,7 @@ public class InitializationBean {
 //            }
             if (machineDAO.listMachines().size() == 0) {
                 for (int i = 0; i < 20; i++) {
-                    Machine machine = new Machine(i, 5+ i * 0.25 + i, 45, WashingMachineEnum.WashingMachine);
+                    Machine machine = new Machine(i*324, 5+ i * 0.25 + i, 45, WashingMachineEnum.WashingMachine);
                     machineDAO.create(machine);
                 }
                 em.flush();

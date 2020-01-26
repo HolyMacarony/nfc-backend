@@ -10,9 +10,9 @@
     <container qualifier="widlfly-remote" default="true">
         <configuration>
             <property name="managementAddress">127.0.0.1</property>
-            <property name="managementPort">9990</property>
-            <property name="username">admin</property>
-            <property name="password">Uw^QkWe|:a|?z]55rk=c</property>
+            <property name="managementPort">9000</property>
+            <property name="username">wildflyAdmin</property>
+            <property name="password">=^E~qv=IX7:hY3pNLvKR</property>
         </configuration>
     </container>
 

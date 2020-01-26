@@ -137,8 +137,8 @@
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-<!--         don't specify an auth-constraint -->
-<!--         you can specify a user-data-constraint if desired -->
+<!--         don't specify an auth-constraint-->
+<!--         you can specify a user-data-constraint if desired-->
     </security-constraint>
 
     <!--ALL SSL-->

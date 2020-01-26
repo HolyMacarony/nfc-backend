@@ -34,6 +34,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     protected static final String API_TOKEN = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..3nb82wtxtpERQQZb.yA_TwF2UBTQNwykrcJKUEpV_ezuuWD7nKHCaE9ZIfa9owXB-cn6efjjcureWH49BZRecNZzlb5Dhxq2EA9fNYsbgLC3FRt3sIxA5P7RThDctLLVzQV2j-EgUrAv9CYpOITx2RgoiXKROoCNERvxqUmgmVH9NfhZ6wUTt3uW_-jvi--k3m1U2p6xH5dK8Zj061CgYwGXSgJGIKZ-R_CTGdTB7w9JeXZtVTGTwnLIBdCxPZTqJSfbsTAHrsVeVuzK6hv7VpCekJjuJZANNmh7WQvCTLgMylRWLGbJ5eSQDQd04-IG2mZ5SLsVUJilaK1YPFvTJrxEvNg.VtTMDvJY9UhoijslmMr8YQ";
     protected String authorizationHeader;
+    protected String esp;
 
 //	@Inject
 //	@LoggedIn
@@ -57,6 +58,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         // Get the Authorization header from the request
         authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        esp = requestContext.getHeaderString(HttpHeaders.USER_AGENT);
 
         // Validate the Authorization header
         // if (!isTokenBasedAuthentication(authorizationHeader)) {
@@ -69,7 +71,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // .substring(AUTHENTICATION_SCHEME.length()).trim();
 
         //ESP ACCESS
-        if (!authorizationHeader.equals(API_TOKEN)) {
+        if (!(esp.equals("ESP8622") && authorizationHeader.equals(API_TOKEN))) {
 
             String token = authorizationHeader;
             // REST API CALL
